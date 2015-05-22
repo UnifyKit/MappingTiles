@@ -179,5 +179,10 @@ namespace MappingTiles
         {
             return x.GetHashCode() ^ y.GetHashCode() ^ isEmpty.GetHashCode();
         }
+
+        public bool Equals(Point other)
+        {
+            return CompareTo(other) == 1;
+        }
     }
 }

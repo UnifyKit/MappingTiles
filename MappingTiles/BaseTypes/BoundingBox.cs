@@ -1,25 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 
 namespace MappingTiles
 {
     public struct BoundingBox : IEquatable<BoundingBox>
     {
+        public BoundingBox(Point lowerLeft, Point upperRight)
+            : this(lowerLeft.X, lowerLeft.Y, upperRight.X, upperRight.Y)
+        { }
+
         public BoundingBox(double minX, double minY, double maxX, double maxY)
             : this()
         {
-            MinX = minX;
-            MinY = minY;
-            MaxX = maxX;
-            MaxY = maxY;
-
             if (minX > maxX || minY > maxY)
             {
-                throw new ArgumentException("min should be smaller than max");
+                throw new ArgumentException(ApplicationMessages.BoundingBoxValuesInvalid);
             }
+
+            this.MinX = minX;
+            this.MinY = minY;
+            this.MaxX = maxX;
+            this.MaxY = maxY;
         }
 
         public double MinX
@@ -44,6 +45,22 @@ namespace MappingTiles
         {
             get;
             private set;
+        }
+
+        public Point LowerLeft
+        {
+            get
+            {
+                return new Point(MinX, MinY);
+            }
+        }
+
+        public Point UpperRight
+        {
+            get
+            {
+                return new Point(MaxX, MaxY);
+            }
         }
 
         public double CenterX
@@ -71,37 +88,29 @@ namespace MappingTiles
             get { return Width * Height; }
         }
 
-        public BoundingBox Intersect(BoundingBox other)
+        public BoundingBox GetIntersection(BoundingBox other)
         {
-            return new BoundingBox(
-                Math.Max(MinX, other.MinX),
-                Math.Max(MinY, other.MinY),
-                Math.Min(MaxX, other.MaxX),
-                Math.Min(MaxY, other.MaxY));
+            return new BoundingBox(Math.Max(MinX, other.MinX), Math.Max(MinY, other.MinY),
+                Math.Min(MaxX, other.MaxX), Math.Min(MaxY, other.MaxY));
         }
 
-        public bool Intersects(BoundingBox box)
+        public bool IsIntersected(BoundingBox box)
         {
-            return !(
-                        box.MinX > MaxX ||
-                        box.MaxX < MinX ||
-                        box.MinY > MaxY ||
-                        box.MaxY < MinY);
+            return !(box.MinX > MaxX || box.MaxX < MinX || box.MinY > MaxY || box.MaxY < MinY);
         }
 
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture,
-                                 "{0},{1},{2},{3}", MinX, MinY, MaxX, MaxY);
+            return String.Format(CultureInfo.InvariantCulture, "{0},{1},{2},{3}", MinX, MinY, MaxX, MaxY);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object other)
         {
-            if (!(obj is BoundingBox))
+            if (!(other is BoundingBox))
             {
                 return false;
             }
-            return Equals((BoundingBox)obj);
+            return Equals((BoundingBox)other);
         }
 
         public bool Equals(BoundingBox extent)
