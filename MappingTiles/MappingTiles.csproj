@@ -46,6 +46,7 @@
       <DependentUpon>ApplicationMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="BaseTypes\BoundingBox.cs" />
+    <Compile Include="Tiles\TileFormat.cs" />
     <Compile Include="IConable.cs" />
     <Compile Include="BaseTypes\Pixel.cs" />
     <Compile Include="BaseTypes\Point.cs" />
