@@ -10,19 +10,27 @@ namespace MappingTiles
         private const int StandardDpi = 96;
         private const double InchPerMeter = 39.37;
 
+        private string id;
         private double resolution;
         private double scale;
         private int screenDpi;
 
         public ZoomLevel()
-            : this(ResolutionOfZoomLevel0)
+            : this(ResolutionOfZoomLevel0,Utilities.CreateUniqueId())
         { }
 
-        public ZoomLevel(double resolution)
+        public ZoomLevel(double resolution, string id)
         {
             this.screenDpi = StandardDpi;
 
             this.Resolution = resolution;
+            this.Id = id;
+        }
+
+        public string Id
+        {
+            get { return id; }
+            private set { id = value; }
         }
 
         public double Resolution
