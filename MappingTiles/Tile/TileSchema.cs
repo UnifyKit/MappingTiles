@@ -26,6 +26,7 @@ namespace MappingTiles
         public Collection<ZoomLevel> ZoomLevels
         {
             get;
+            private set;
         }
 
         public bool IsYAxisReversed

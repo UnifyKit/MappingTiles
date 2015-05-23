@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MappingTiles", "MappingTiles\MappingTiles.csproj", "{C0E860A3-8E0F-4E7A-A83A-2FADE8903439}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemporaryTest", "TemporaryTest\TemporaryTest.csproj", "{B0970078-4050-4CA0-9CB5-EE481B5F899A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C0E860A3-8E0F-4E7A-A83A-2FADE8903439}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0E860A3-8E0F-4E7A-A83A-2FADE8903439}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0E860A3-8E0F-4E7A-A83A-2FADE8903439}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0970078-4050-4CA0-9CB5-EE481B5F899A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0970078-4050-4CA0-9CB5-EE481B5F899A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0970078-4050-4CA0-9CB5-EE481B5F899A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0970078-4050-4CA0-9CB5-EE481B5F899A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
