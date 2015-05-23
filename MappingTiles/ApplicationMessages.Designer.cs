@@ -70,6 +70,15 @@ namespace MappingTiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The input parameter or the collection used for query is null or empty. .
+        /// </summary>
+        internal static string CollectionNullOrEmpty {
+            get {
+                return ResourceManager.GetString("CollectionNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input value is out of the range..
         /// </summary>
         internal static string ValueOutOfRange {

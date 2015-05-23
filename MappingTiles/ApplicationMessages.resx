@@ -120,6 +120,9 @@
   <data name="BoundingBoxValuesInvalid" xml:space="preserve">
     <value>The input coordinates for initialization is not correct. the minX should be smaller than maxX, or the minY should be smaller than maxY.</value>
   </data>
+  <data name="CollectionNullOrEmpty" xml:space="preserve">
+    <value>The input parameter or the collection used for query is null or empty. </value>
+  </data>
   <data name="ValueOutOfRange" xml:space="preserve">
     <value>The input value is out of the range.</value>
   </data>

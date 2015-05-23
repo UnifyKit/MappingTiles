@@ -50,6 +50,7 @@
     <Compile Include="BaseType\Pixel.cs" />
     <Compile Include="BaseType\Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\InternalChecker.cs" />
     <Compile Include="Tile\TileFormat.cs">
       <SubType>Code</SubType>
     </Compile>

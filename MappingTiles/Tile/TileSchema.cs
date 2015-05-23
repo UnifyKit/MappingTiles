@@ -34,5 +34,38 @@ namespace MappingTiles
             get;
             set;
         }
+
+        public ZoomLevel GetNearestZoomLevel(double resolution)
+        {
+            InternalChecker.CheckArrayIsEmptyOrNull(ZoomLevels, "ZoomLevels");
+
+            var orderedZoomLevels = ZoomLevels.OrderByDescending(z => z.Resolution);
+
+            // smaller than smallest
+            if (orderedZoomLevels.Last().Resolution > resolution)
+            {
+                return orderedZoomLevels.Last();
+            }
+
+            // bigger than biggest
+            if (orderedZoomLevels.First().Resolution < resolution)
+            {
+                return orderedZoomLevels.First();
+            }
+
+            ZoomLevel result = null;
+            double resultDistance = double.MaxValue;
+            foreach (var current in orderedZoomLevels)
+            {
+                double distance = Math.Abs(current.Resolution - resolution);
+                if (distance < resultDistance)
+                {
+                    result = current;
+                    resultDistance = distance;
+                }
+            }
+
+            return result;
+        }
     }
 }
