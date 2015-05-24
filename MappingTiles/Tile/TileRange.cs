@@ -4,10 +4,6 @@ namespace MappingTiles
 {
     public struct TileRange : IEquatable<TileRange>
     {
-        public TileRange()
-            : this(0, 0, 0, 0)
-        { }
-
         public TileRange(int startColumn, int startRow)
             : this(startColumn, startRow, 1, 1)
         { }

@@ -19,6 +19,10 @@ namespace MappingTiles
             : this(ResolutionOfZoomLevel0,Utilities.CreateUniqueId())
         { }
 
+        public ZoomLevel(double resolution)
+            : this(resolution, Utilities.CreateUniqueId())
+        { }
+
         public ZoomLevel(double resolution, string id)
         {
             this.screenDpi = StandardDpi;

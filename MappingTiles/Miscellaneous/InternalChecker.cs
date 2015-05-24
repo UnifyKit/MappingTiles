@@ -13,5 +13,14 @@ namespace MappingTiles
                 throw new ArgumentNullException(argument,ApplicationMessages.CollectionNullOrEmpty);
             }
         }
+
+        public static void CheckParameterIsNull(object value, string parameter)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(parameter);
+            }
+        }
+
     }
 }
