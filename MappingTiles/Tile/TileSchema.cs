@@ -9,7 +9,9 @@ namespace MappingTiles
     public abstract class TileSchema
     {
         public TileSchema()
-        { }
+        {
+            this.IsYAxisReversed = true;
+        }
 
         public BoundingBox BoundingBox
         {
