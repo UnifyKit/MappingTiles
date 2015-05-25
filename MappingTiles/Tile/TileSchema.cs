@@ -12,6 +12,7 @@ namespace MappingTiles
         {
             this.IsYAxisReversed = true;
             this.TileFormat = TileFormat.Png;
+            this.ZoomLevels = new Collection<ZoomLevel>();
         }
 
         public BoundingBox BoundingBox
@@ -33,6 +34,12 @@ namespace MappingTiles
         }
 
         public bool IsYAxisReversed
+        {
+            get;
+            set;
+        }
+
+        public string Crs
         {
             get;
             set;
@@ -70,6 +77,5 @@ namespace MappingTiles
 
             return result;
         }
-
     }
 }
