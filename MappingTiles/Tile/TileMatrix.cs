@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 
 namespace MappingTiles
 {
@@ -11,7 +12,7 @@ namespace MappingTiles
             : this(resolution, tileScehma, Utilities.CreateUniqueId())
         { }
 
-        public TileMatrix(double resolution,TileSchema tileSchema, string id)
+        public TileMatrix(double resolution, TileSchema tileSchema, string id)
         {
             this.ZoomLevel = new ZoomLevel(resolution);
             this.TileSchema = tileSchema;
@@ -75,9 +76,13 @@ namespace MappingTiles
             set;
         }
 
-        public TileRange GetTiles(BoundingBox boundingBox)
+        public Collection<Tile> GetTiles(BoundingBox boundingBox)
         {
             var tileWorldUnits = ZoomLevel.Resolution * TileWidth;
+
+            Collection<Tile> tiles = new Collection<Tile>();
+
+            var tileRange = new TileRange(-1, -1);
             if (TileSchema.IsYAxisReversed)
             {
                 var firstCol = (int)Math.Floor((boundingBox.MinX - TileSchema.BoundingBox.MinX) / tileWorldUnits);
@@ -85,7 +90,7 @@ namespace MappingTiles
                 var lastCol = (int)Math.Ceiling((boundingBox.MaxX - TileSchema.BoundingBox.MinX) / tileWorldUnits);
                 var lastRow = (int)Math.Ceiling((-boundingBox.MinY + TileSchema.BoundingBox.MaxY) / tileWorldUnits);
 
-                return new TileRange(firstCol, firstRow, lastCol - firstCol, lastRow - firstRow);
+                tileRange= new TileRange(firstCol, firstRow, lastCol - firstCol, lastRow - firstRow);
             }
             else
             {
@@ -94,8 +99,18 @@ namespace MappingTiles
                 var lastCol = (int)Math.Ceiling((boundingBox.MaxX - TileSchema.BoundingBox.MinX) / tileWorldUnits);
                 var lastRow = (int)Math.Ceiling((boundingBox.MaxY - TileSchema.BoundingBox.MaxY) / tileWorldUnits);
 
-                return new TileRange(firstCol, firstRow, lastCol - firstCol, lastRow - firstRow);
+                tileRange = new TileRange(firstCol, firstRow, lastCol - firstCol, lastRow - firstRow);
             }
+
+            for (var x = tileRange.StartColumn; x < tileRange.StartColumn + tileRange.NumberOfColumns; x++)
+            {
+                for (var y = tileRange.StartRow; y < tileRange.StartRow + tileRange.NumberOfRows; y++)
+                {
+                    tiles.Add(new Tile(x, y, ZoomLevel.Resolution, TileSchema));
+                }
+            }
+
+            return tiles;
         }
 
         public BoundingBox GetTilesBoundingBox(TileRange range)
@@ -105,7 +120,7 @@ namespace MappingTiles
             {
                 var tileWorldUnits = resolution * TileWidth;
                 var minX = range.StartColumn * tileWorldUnits + TileSchema.BoundingBox.MinX;
-                var minY = -(range.StartRow+ range.NumberOfRows) * tileWorldUnits + TileSchema.BoundingBox.MaxY;
+                var minY = -(range.StartRow + range.NumberOfRows) * tileWorldUnits + TileSchema.BoundingBox.MaxY;
                 var maxX = (range.StartColumn + range.NumberOfColumns) * tileWorldUnits + TileSchema.BoundingBox.MinX;
                 var maxY = -(range.StartRow) * tileWorldUnits + TileSchema.BoundingBox.MaxY;
 

@@ -2,10 +2,13 @@
 
 namespace MappingTiles
 {
-    public struct TileRange : IEquatable<TileRange>
+    public class TileRange : IEquatable<TileRange>
     {
+        protected TileRange()
+        { }
+
         public TileRange(int startColumn, int startRow)
-            : this(startColumn, startRow, 1, 1)
+            : this(startColumn, startRow, 0, 0)
         { }
 
         public TileRange(int startColumn, int startRow, int numberOfColumns, int numberOfRows)
@@ -31,13 +34,13 @@ namespace MappingTiles
         public int NumberOfColumns
         {
             get;
-            private set;
+            set;
         }
 
         public int NumberOfRows
         {
             get;
-            private set;
+            set;
         }
 
         public override bool Equals(object other)
