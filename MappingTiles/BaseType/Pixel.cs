@@ -24,7 +24,7 @@ namespace MappingTiles
         /// <param name="y">The Pixel's Y coordinate</param>
         /// <seealso cref="Pixel.X"/>
         /// <seealso cref="Pixel.Y"/>
-        public Pixel(int x, int y)
+        public Pixel(float x, float y)
         {
             this.X = x;
             this.Y = y;
@@ -34,7 +34,7 @@ namespace MappingTiles
         /// Gets or sets the Pixel's X coordinate.
         /// </summary>
         [DataMember]
-        public int X
+        public float X
         {
             get;
             set;
@@ -44,7 +44,7 @@ namespace MappingTiles
         /// Gets or sets the Pixel's Y coordinate.
         /// </summary>
         [DataMember]
-        public int Y
+        public float Y
         {
             get;
             set;

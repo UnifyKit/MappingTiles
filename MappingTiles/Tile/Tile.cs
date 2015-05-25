@@ -1,13 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MappingTiles
 {
     public class Tile
     {
-        public Tile(int column, int row, double resolution)
+        private int width;
+        private int height;
+        private ZoomLevel zoomLevel;
+        private TileSchema tileSchema;
+
+        protected Tile()
+        { }
+
+        public Tile(BoundingBox boundingBox, TileSchema tileSchema)
+        {
+            Width = 256;
+            Height = 256;
+            BoundingBox = boundingBox;
+            Schema = tileSchema;
+
+            ZoomLevel = GetZoomLevel();
+            InitilizeColumnRowWithBounds();
+        }
+
+        public Tile(int column, int row, double resolution, TileSchema tileSchema)
         {
             Width = 256;
             Height = 256;
@@ -17,44 +33,52 @@ namespace MappingTiles
 
         public int Width
         {
-            get;
-            set;
+            get { return width; }
+            set
+            {
+                width = value;
+                TileSizePropertyChanged();
+            }
         }
 
         public int Height
         {
-            get;
-            set;
+            get { return height; }
+            set
+            {
+                height = value;
+                TileSizePropertyChanged();
+            }
         }
 
         public BoundingBox BoundingBox
         {
             get;
-            set;
+            private set;
         }
 
         public int Column
         {
             get;
-            set;
+            private set;
         }
 
         public int Row
         {
             get;
-            set;
+            private set;
         }
 
         public ZoomLevel ZoomLevel
         {
-            get;
-            set;
+            get { return zoomLevel; }
+            private set { zoomLevel = value; }
         }
 
         public TileSchema Schema
         {
-            get;
-            private set;
+            get { return tileSchema; }
+            private set { tileSchema = value; }
         }
 
         public Pixel GetViewPortPosition(int viewPortWidth, int viewPortHeight)
@@ -62,11 +86,10 @@ namespace MappingTiles
             InternalChecker.CheckParameterIsNull(Schema, "Schema");
             InternalChecker.CheckParameterIsNull(ZoomLevel, "ZoomLevel");
 
-            Pixel pixel = null;
+            double pixelX = BoundingBox.MinX / ZoomLevel.Resolution;
+            double pixelY = BoundingBox.MaxX / ZoomLevel.Resolution;
 
-
-
-            return pixel;
+            return new Pixel((float)pixelX, (float)pixelY);
         }
 
         private ZoomLevel GetZoomLevel()
@@ -101,6 +124,28 @@ namespace MappingTiles
 
             BoundingBox tileBounds = new BoundingBox(minX, minY, maxX, maxY);
             return tileBounds;
+        }
+
+        private void InitilizeColumnRowWithBounds()
+        {
+            double worldTileWidth = Width * ZoomLevel.Resolution;
+            double worldTileHeight = Height * ZoomLevel.Resolution;
+
+            Column = (int)Math.Floor(BoundingBox.MinX - Schema.BoundingBox.MinX / worldTileWidth);
+            if (Schema.IsYAxisReversed)
+            {
+                Row = (int)Math.Floor((-BoundingBox.MaxY + Schema.BoundingBox.MaxY) / worldTileHeight);
+            }
+            else
+            {
+                Row = (int)Math.Floor((BoundingBox.MinY - Schema.BoundingBox.MinY) / worldTileHeight);
+            }
+        }
+
+        private void TileSizePropertyChanged()
+        {
+            ZoomLevel = GetZoomLevel();
+            BoundingBox = GetBoundingBoxByColumnRow(Column, Row);
         }
     }
 }
