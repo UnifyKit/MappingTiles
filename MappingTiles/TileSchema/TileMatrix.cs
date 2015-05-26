@@ -76,11 +76,11 @@ namespace MappingTiles
             set;
         }
 
-        public Collection<Tile> GetTiles(BoundingBox boundingBox)
+        public Collection<TileInfo> GetTiles(BoundingBox boundingBox)
         {
             var tileWorldUnits = ZoomLevel.Resolution * TileWidth;
 
-            Collection<Tile> tiles = new Collection<Tile>();
+            Collection<TileInfo> tiles = new Collection<TileInfo>();
 
             var tileRange = new TileRange(-1, -1);
             if (TileSchema.IsYAxisReversed)
@@ -106,7 +106,7 @@ namespace MappingTiles
             {
                 for (var y = tileRange.StartRow; y < tileRange.StartRow + tileRange.NumberOfRows; y++)
                 {
-                    tiles.Add(new Tile(x, y, ZoomLevel.Resolution, TileSchema));
+                    tiles.Add(new TileInfo(x, y, ZoomLevel.Resolution, TileSchema));
                 }
             }
 

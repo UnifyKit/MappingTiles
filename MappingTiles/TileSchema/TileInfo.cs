@@ -2,17 +2,17 @@
 
 namespace MappingTiles
 {
-    public class Tile
+    public class TileInfo
     {
         private int width;
         private int height;
         private ZoomLevel zoomLevel;
         private TileSchema tileSchema;
 
-        protected Tile()
+        protected TileInfo()
         { }
 
-        public Tile(BoundingBox boundingBox, TileSchema tileSchema)
+        public TileInfo(BoundingBox boundingBox, TileSchema tileSchema)
         {
             Width = 256;
             Height = 256;
@@ -23,7 +23,7 @@ namespace MappingTiles
             InitilizeColumnRowWithBounds();
         }
 
-        public Tile(int column, int row, double resolution, TileSchema tileSchema)
+        public TileInfo(int column, int row, double resolution, TileSchema tileSchema)
         {
             Width = 256;
             Height = 256;
