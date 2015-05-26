@@ -27,7 +27,6 @@ namespace MappingTiles
                 }
                 
                 numberOfZoomLevels = value;
-                    
             }
         }
 
