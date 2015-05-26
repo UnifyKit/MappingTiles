@@ -2,12 +2,12 @@
 
 namespace MappingTiles
 {
-    public class Wgs84TileScehma : TileSchema
+    public class Wgs84TileSchema : TileSchema
     {
         private const double MaxResolution = 1.40625;
         private int numberOfZoomLevels = 20;
 
-        public Wgs84TileScehma()
+        public Wgs84TileSchema()
             : base()
         {
             Crs = "EPSG:4326";
