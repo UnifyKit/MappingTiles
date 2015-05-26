@@ -64,8 +64,12 @@
     <Compile Include="Tile\TileSchema.cs" />
     <Compile Include="BaseType\ZoomLevel.cs" />
     <Compile Include="Miscellaneous\Utilities.cs" />
-    <Compile Include="Tile\TileSchemas\BingMapsTileSchema.cs" />
-    <Compile Include="Tile\TileSchemas\SphericalMercatorScTilehema.cs" />
+    <Compile Include="Tile\TileSchemas\BingMapsTileSchema.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tile\TileSchemas\SphericalMercatorScTilehema.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Tile\TileSchemas\Wgs84TileSchema.cs" />
   </ItemGroup>
   <ItemGroup>
