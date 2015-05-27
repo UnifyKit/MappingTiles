@@ -57,25 +57,6 @@
     <Compile Include="Source\TileSource.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TileRequest\AsyncCompletedEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TileRequest\DownloadAsyncCompletedEventArgs.cs" />
-    <Compile Include="TileRequest\NetworkPriority.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TileRequest\TileImage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TileRequest\TileRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TileRequest\TileRequestCompletedHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TileRequest\TileRequestQueue.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="TileSchema\TileInfo.cs" />
     <Compile Include="TileSchema\TileFormat.cs">
       <SubType>Code</SubType>
