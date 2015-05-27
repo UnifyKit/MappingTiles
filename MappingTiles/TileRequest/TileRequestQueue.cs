@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MappingTiles
 {
@@ -13,26 +14,31 @@ namespace MappingTiles
 
         private List<TileRequest> pendingRequests;
         private Dictionary<TileRequest, WebClient> executingRequests;
-        private Thread downloadThread;
+        private Task downloadTask;
         private ManualResetEvent thereMayBeWorkToDo;
 
         static TileRequestQueue()
-		{
+        {
             TileRequestQueue.MaxSimultaneousRequests = 6;
-		}
+        }
 
         private TileRequestQueue()
-		{
+        {
             this.pendingRequests = new List<TileRequest>();
             this.executingRequests = new Dictionary<TileRequest, WebClient>();
-			this.thereMayBeWorkToDo = new ManualResetEvent(true);
-			Thread thread = new Thread(new ThreadStart(this.DownloadThreadStart))
-			{
-				IsBackground = true
-			};
-			this.downloadThread = thread;
-			this.downloadThread.Start();
-		}
+            this.thereMayBeWorkToDo = new ManualResetEvent(true);
+            //Thread thread = new Task(()=>{} new ThreadStart(this.DownloadThreadStart))
+            //{
+            //    IsBackground = true
+            //};
+            Task task = Task.Factory.StartNew(() =>
+            {
+                this.DownloadThreadStart();
+            });
+
+            this.downloadTask = task;
+            this.downloadTask.Start();
+        }
 
         public static TileRequestQueue Instance
         {
@@ -75,7 +81,7 @@ namespace MappingTiles
             }
         }
 
-        private void DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void DownloadDataCompleted(object sender, DownloadAsyncCompletedEventArgs e)
         {
             TileRequest key = null;
             lock (this.executingRequests)
@@ -85,7 +91,7 @@ namespace MappingTiles
                 this.executingRequests.Remove(key);
                 this.thereMayBeWorkToDo.Set();
             }
-            BitmapImage bitmapImage = null;
+            TileImage tileImage = null;
             Exception error = e.Error;
             if (error == null)
             {
@@ -97,22 +103,22 @@ namespace MappingTiles
                     }
                     else
                     {
-                        bitmapImage = new BitmapImage();
-                        bitmapImage.BeginInit();
-                        bitmapImage.StreamSource = new MemoryStream(e.Result);
-                        bitmapImage.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
-                        bitmapImage.CacheOption = BitmapCacheOption.None;
-                        bitmapImage.EndInit();
-                        bitmapImage.Freeze();
+                        tileImage = new TileImage();
+                        tileImage.BeginInit();
+                        tileImage.StreamSource = new MemoryStream(e.Result);
+                        tileImage.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
+                        tileImage.CacheOption = BitmapCacheOption.None;
+                        tileImage.EndInit();
+                        tileImage.Freeze();
                     }
                 }
                 catch (Exception exception)
                 {
                     error = exception;
-                    bitmapImage = null;
+                    tileImage = null;
                 }
             }
-            key.Callback(key.UserToken, bitmapImage, error);
+            key.Callback(key.UserToken, tileImage, error);
             ((WebClient)sender).Dispose();
         }
 

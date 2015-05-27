@@ -14,6 +14,7 @@ namespace MappingTiles
             UserState = userState;
         }
 
+        ///<summary>
         /// Gets a value indicating whether an asynchronous operation has been canceled.
         /// </summary>
         public bool Cancelled
@@ -22,7 +23,7 @@ namespace MappingTiles
             private set;
         }
 
-
+        ///<summary>
         /// Gets a value indicating which error occurred during an asynchronous operation.
         /// </summary>
         public Exception Error
