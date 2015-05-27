@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace MappingTiles
 {
@@ -29,6 +30,14 @@ namespace MappingTiles
             Height = 256;
             ZoomLevel = new ZoomLevel(resolution);
             BoundingBox = GetBoundingBoxByColumnRow(column, row);
+        }
+
+        public string Id
+        {
+            get
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", Column, Row, ZoomLevel.Id);
+            }
         }
 
         public int Width

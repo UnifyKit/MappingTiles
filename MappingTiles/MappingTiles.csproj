@@ -49,6 +49,8 @@
     <Compile Include="BaseType\Pixel.cs" />
     <Compile Include="BaseType\Point.cs" />
     <Compile Include="BaseType\ZoomLevel.cs" />
+    <Compile Include="Cache\ITileCache.cs" />
+    <Compile Include="Cache\MemoryTileCache.cs" />
     <Compile Include="Miscellaneous\InternalChecker.cs" />
     <Compile Include="Miscellaneous\Utilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,6 +77,7 @@
       <LastGenOutput>ApplicationMessages.Designer.cs</LastGenOutput>
     </CodeAnalysisDictionary>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
