@@ -43,13 +43,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncCompletedEventArgs.cs" />
-    <Compile Include="DownloadAsyncCompletedEventArgs.cs" />
     <Compile Include="NetworkPriority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TileRequest.cs" />
-    <Compile Include="TileRequestCompletedHandler.cs" />
-    <Compile Include="TileRequestQueue.cs" />
+    <Compile Include="AsyncTileRequest.cs" />
+    <Compile Include="AsyncTileRequestCompletedHandler.cs" />
+    <Compile Include="AsyncTileRequestQueue.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

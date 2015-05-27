@@ -4,31 +4,29 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace MappingTiles
 {
-    public class TileRequestQueue : IDisposable
+    public class AsyncTileRequestQueue : IDisposable
     {
         private static int MaxSimultaneousRequests;
-        private static TileRequestQueue instance;
-        private List<TileRequest> pendingRequests;
-        private Dictionary<TileRequest, WebClient> executingRequests;
+        private static AsyncTileRequestQueue instance;
+        private List<AsyncTileRequest> pendingRequests;
+        private Dictionary<AsyncTileRequest, WebClient> executingRequests;
         private Thread downloadThread;
         private ManualResetEvent thereMayBeWorkToDo;
 
-        static TileRequestQueue()
+        static AsyncTileRequestQueue()
         {
-            TileRequestQueue.MaxSimultaneousRequests = 6;
+            AsyncTileRequestQueue.MaxSimultaneousRequests = 6;
         }
 
-        private TileRequestQueue()
+        private AsyncTileRequestQueue()
         {
-            this.pendingRequests = new List<TileRequest>();
-            this.executingRequests = new Dictionary<TileRequest, WebClient>();
+            this.pendingRequests = new List<AsyncTileRequest>();
+            this.executingRequests = new Dictionary<AsyncTileRequest, WebClient>();
             this.thereMayBeWorkToDo = new ManualResetEvent(true);
             Thread thread = new Thread(new ThreadStart(this.DownloadThreadStart))
             {
@@ -38,26 +36,26 @@ namespace MappingTiles
             this.downloadThread.Start();
         }
 
-        public static TileRequestQueue Instance
+        public static AsyncTileRequestQueue Instance
         {
             get
             {
-                if (TileRequestQueue.instance == null)
+                if (AsyncTileRequestQueue.instance == null)
                 {
-                    TileRequestQueue.instance = new TileRequestQueue();
+                    AsyncTileRequestQueue.instance = new AsyncTileRequestQueue();
                 }
-                return TileRequestQueue.instance;
+                return AsyncTileRequestQueue.instance;
             }
         }
 
-        public TileRequest CreateRequest(Uri uri, NetworkPriority networkPriority, TileRequestCompletedHandler callback)
+        public AsyncTileRequest CreateRequest(Uri uri, NetworkPriority networkPriority, AsyncTileRequestCompletedHandler callback)
         {
-            TileRequest TileRequest = new TileRequest(uri, callback)
+            AsyncTileRequest TileRequest = new AsyncTileRequest(uri, callback)
             {
                 NetworkPriority = networkPriority
             };
 
-            TileRequest tempTileRequest = TileRequest;
+            AsyncTileRequest tempTileRequest = TileRequest;
             lock (this.pendingRequests)
             {
                 this.pendingRequests.Add(tempTileRequest);
@@ -83,10 +81,10 @@ namespace MappingTiles
 
         private void DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
-            TileRequest key = null;
+            AsyncTileRequest key = null;
             lock (this.executingRequests)
             {
-                KeyValuePair<TileRequest, WebClient> keyValuePair = this.executingRequests.First<KeyValuePair<TileRequest, WebClient>>((KeyValuePair<TileRequest, WebClient> item) => item.Value == sender);
+                KeyValuePair<AsyncTileRequest, WebClient> keyValuePair = this.executingRequests.First<KeyValuePair<AsyncTileRequest, WebClient>>((KeyValuePair<AsyncTileRequest, WebClient> item) => item.Value == sender);
                 key = keyValuePair.Key;
                 this.executingRequests.Remove(key);
                 this.thereMayBeWorkToDo.Set();
@@ -119,6 +117,7 @@ namespace MappingTiles
                 }
             }
             key.Callback(bitmapImage, error);
+
             ((WebClient)sender).Dispose();
         }
 
@@ -129,40 +128,41 @@ namespace MappingTiles
                 WaitHandle[] waitHandleArray = new WaitHandle[] { this.thereMayBeWorkToDo };
                 WaitHandle.WaitAll(waitHandleArray);
 
-                TileRequest item = null;
+                AsyncTileRequest tempTileREQUEST = null;
                 lock (this.executingRequests)
                 {
                     lock (this.pendingRequests)
                     {
-                        (from wr in this.pendingRequests
-                         where wr.IsAborted
-                         select wr).ToList<TileRequest>().ForEach((TileRequest wr) => this.pendingRequests.Remove(wr));
+                        (from pendingRequest in this.pendingRequests
+                         where pendingRequest.IsAborted
+                         select pendingRequest).ToList<AsyncTileRequest>().ForEach((AsyncTileRequest tr) => this.pendingRequests.Remove(tr));
 
-                        foreach (TileRequest pendingRequest in this.pendingRequests)
+                        foreach (AsyncTileRequest pendingRequest in this.pendingRequests)
                         {
                             pendingRequest.NetworkPrioritySnapshot = pendingRequest.NetworkPriority;
                         }
 
-                        this.pendingRequests.Sort((TileRequest left, TileRequest right) => Comparer<int>.Default.Compare(left.NetworkPrioritySnapshot, right.NetworkPrioritySnapshot));
-                        if (this.executingRequests.Count >= TileRequestQueue.MaxSimultaneousRequests || this.pendingRequests.Count <= 0)
+                        this.pendingRequests.Sort((AsyncTileRequest left, AsyncTileRequest right) => Comparer<int>.Default.Compare((int)left.NetworkPrioritySnapshot, (int)right.NetworkPrioritySnapshot));
+                        if (this.executingRequests.Count >= AsyncTileRequestQueue.MaxSimultaneousRequests || this.pendingRequests.Count <= 0)
                         {
                             this.thereMayBeWorkToDo.Reset();
                         }
                         else
                         {
-                            item = this.pendingRequests[this.pendingRequests.Count - 1];
+                            tempTileREQUEST = this.pendingRequests[this.pendingRequests.Count - 1];
                             this.pendingRequests.RemoveAt(this.pendingRequests.Count - 1);
                         }
                     }
-                    if (item != null)
+                    if (tempTileREQUEST != null)
                     {
                         WebClient webClient = new WebClient()
                         {
                             CachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable)
                         };
                         webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadDataCompleted);
-                        this.executingRequests.Add(item, webClient);
-                        webClient.DownloadDataAsync(item.Uri, null);
+
+                        this.executingRequests.Add(tempTileREQUEST, webClient);
+                        webClient.DownloadDataAsync(tempTileREQUEST.Uri, null);
                     }
                 }
             }

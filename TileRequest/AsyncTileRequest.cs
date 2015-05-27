@@ -2,21 +2,21 @@
 
 namespace MappingTiles
 {
-    public class TileRequest
+    public class AsyncTileRequest
     {
 		private Uri uri;
 		private bool isAborted;
 		private NetworkPriority networkPriority;
-		private TileRequestCompletedHandler callback;
+		private AsyncTileRequestCompletedHandler callback;
 
-        private TileRequest()
+        private AsyncTileRequest()
         { }
 
-        public TileRequest(Uri uri)
+        public AsyncTileRequest(Uri uri)
             : this(uri, null)
         { }
 
-        public TileRequest(Uri uri, TileRequestCompletedHandler callback)
+        public AsyncTileRequest(Uri uri, AsyncTileRequestCompletedHandler callback)
         {
             this.uri = uri;
             this.callback = callback;
@@ -38,7 +38,7 @@ namespace MappingTiles
 			}
 		}
 
-		public TileRequestCompletedHandler Callback
+		public AsyncTileRequestCompletedHandler Callback
 		{
 			get
 			{
