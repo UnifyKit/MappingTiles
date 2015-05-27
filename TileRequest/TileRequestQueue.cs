@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Cache;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace MappingTiles
 {
@@ -11,10 +15,9 @@ namespace MappingTiles
     {
         private static int MaxSimultaneousRequests;
         private static TileRequestQueue instance;
-
         private List<TileRequest> pendingRequests;
         private Dictionary<TileRequest, WebClient> executingRequests;
-        private Task downloadTask;
+        private Thread downloadThread;
         private ManualResetEvent thereMayBeWorkToDo;
 
         static TileRequestQueue()
@@ -27,17 +30,12 @@ namespace MappingTiles
             this.pendingRequests = new List<TileRequest>();
             this.executingRequests = new Dictionary<TileRequest, WebClient>();
             this.thereMayBeWorkToDo = new ManualResetEvent(true);
-            //Thread thread = new Task(()=>{} new ThreadStart(this.DownloadThreadStart))
-            //{
-            //    IsBackground = true
-            //};
-            Task task = Task.Factory.StartNew(() =>
+            Thread thread = new Thread(new ThreadStart(this.DownloadThreadStart))
             {
-                this.DownloadThreadStart();
-            });
-
-            this.downloadTask = task;
-            this.downloadTask.Start();
+                IsBackground = true
+            };
+            this.downloadThread = thread;
+            this.downloadThread.Start();
         }
 
         public static TileRequestQueue Instance
@@ -54,17 +52,19 @@ namespace MappingTiles
 
         public TileRequest CreateRequest(Uri uri, NetworkPriority networkPriority, TileRequestCompletedHandler callback)
         {
-            TileRequest tileRequest = new TileRequest(uri, callback)
+            TileRequest TileRequest = new TileRequest(uri, callback)
             {
                 NetworkPriority = networkPriority
             };
-            TileRequest bitmapImageRequest1 = tileRequest;
+
+            TileRequest tempTileRequest = TileRequest;
             lock (this.pendingRequests)
             {
-                this.pendingRequests.Add(bitmapImageRequest1);
+                this.pendingRequests.Add(tempTileRequest);
             }
             this.thereMayBeWorkToDo.Set();
-            return bitmapImageRequest1;
+
+            return tempTileRequest;
         }
 
         public void Dispose()
@@ -81,7 +81,7 @@ namespace MappingTiles
             }
         }
 
-        private void DownloadDataCompleted(object sender, DownloadAsyncCompletedEventArgs e)
+        private void DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             TileRequest key = null;
             lock (this.executingRequests)
@@ -91,7 +91,7 @@ namespace MappingTiles
                 this.executingRequests.Remove(key);
                 this.thereMayBeWorkToDo.Set();
             }
-            TileImage tileImage = null;
+            BitmapImage bitmapImage = null;
             Exception error = e.Error;
             if (error == null)
             {
@@ -103,22 +103,22 @@ namespace MappingTiles
                     }
                     else
                     {
-                        tileImage = new TileImage();
-                        tileImage.BeginInit();
-                        tileImage.StreamSource = new MemoryStream(e.Result);
-                        tileImage.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
-                        tileImage.CacheOption = BitmapCacheOption.None;
-                        tileImage.EndInit();
-                        tileImage.Freeze();
+                        bitmapImage = new BitmapImage();
+                        bitmapImage.BeginInit();
+                        bitmapImage.StreamSource = new MemoryStream(e.Result);
+                        bitmapImage.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
+                        bitmapImage.CacheOption = BitmapCacheOption.None;
+                        bitmapImage.EndInit();
+                        bitmapImage.Freeze();
                     }
                 }
                 catch (Exception exception)
                 {
                     error = exception;
-                    tileImage = null;
+                    bitmapImage = null;
                 }
             }
-            key.Callback(key.UserToken, tileImage, error);
+            key.Callback(bitmapImage, error);
             ((WebClient)sender).Dispose();
         }
 
@@ -128,21 +128,23 @@ namespace MappingTiles
             {
                 WaitHandle[] waitHandleArray = new WaitHandle[] { this.thereMayBeWorkToDo };
                 WaitHandle.WaitAll(waitHandleArray);
-                BitmapImageRequest item = null;
+
+                TileRequest item = null;
                 lock (this.executingRequests)
                 {
                     lock (this.pendingRequests)
                     {
-                        (
-                            from wr in this.pendingRequests
-                            where wr.Aborted
-                            select wr).ToList<BitmapImageRequest>().ForEach((BitmapImageRequest wr) => this.pendingRequests.Remove(wr));
-                        foreach (BitmapImageRequest pendingRequest in this.pendingRequests)
+                        (from wr in this.pendingRequests
+                         where wr.IsAborted
+                         select wr).ToList<TileRequest>().ForEach((TileRequest wr) => this.pendingRequests.Remove(wr));
+
+                        foreach (TileRequest pendingRequest in this.pendingRequests)
                         {
                             pendingRequest.NetworkPrioritySnapshot = pendingRequest.NetworkPriority;
                         }
-                        this.pendingRequests.Sort((BitmapImageRequest left, BitmapImageRequest right) => Comparer<int>.Default.Compare(left.NetworkPrioritySnapshot, right.NetworkPrioritySnapshot));
-                        if (this.executingRequests.Count >= BitmapImageRequestQueue.MaxSimultaneousRequests || this.pendingRequests.Count <= 0)
+
+                        this.pendingRequests.Sort((TileRequest left, TileRequest right) => Comparer<int>.Default.Compare(left.NetworkPrioritySnapshot, right.NetworkPrioritySnapshot));
+                        if (this.executingRequests.Count >= TileRequestQueue.MaxSimultaneousRequests || this.pendingRequests.Count <= 0)
                         {
                             this.thereMayBeWorkToDo.Reset();
                         }

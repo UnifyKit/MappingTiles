@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Windows.Media.Imaging;
 
 namespace MappingTiles
 {
-    public delegate void TileRequestCompletedHandler(object userToken, TileImage result, Exception error);
+    public delegate void TileRequestCompletedHandler(BitmapImage result, Exception error);
 }
