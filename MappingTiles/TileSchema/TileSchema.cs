@@ -10,7 +10,7 @@ namespace MappingTiles
     {
         protected TileSchema()
         {
-            this.IsYAxisReversed = true;
+            this.IsYAxisReversed = false;
             this.TileFormat = TileFormat.Png;
             this.ZoomLevels = new Collection<ZoomLevel>();
         }
