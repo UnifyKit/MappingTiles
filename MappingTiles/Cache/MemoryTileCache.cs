@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace MappingTiles
 {
@@ -10,17 +9,32 @@ namespace MappingTiles
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private readonly object syncLocker = new object();
         private readonly Dictionary<string, T> tileDatas = new Dictionary<string, T>();
         private readonly Dictionary<string, DateTime> queriedDatas = new Dictionary<string, DateTime>();
-        private readonly object syncLocker = new object();
         private readonly Func<string, bool> keepTileInMemory;
+
         private bool isDisposed;
 
-        public MemoryTileCache(int minTiles = 50, int maxTiles = 100, Func<string, bool> keepTileInMemory = null)
+        public MemoryTileCache()
+            : this(50, 100, null)
         {
-            if (minTiles >= maxTiles) throw new ArgumentException("minTiles should be smaller than maxTiles");
-            if (minTiles < 0) throw new ArgumentException("minTiles should be larger than zero");
-            if (maxTiles < 0) throw new ArgumentException("maxTiles should be larger than zero");
+        }
+
+        public MemoryTileCache(int minTiles, int maxTiles, Func<string, bool> keepTileInMemory)
+        {
+            if (minTiles >= maxTiles)
+            {
+                throw new ArgumentException("minTiles should be smaller than maxTiles");
+            }
+            if (minTiles < 0)
+            {
+                throw new ArgumentException("minTiles should be larger than zero");
+            }
+            if (maxTiles < 0)
+            {
+                throw new ArgumentException("maxTiles should be larger than zero");
+            }
 
             MinTiles = minTiles;
             MaxTiles = maxTiles;
@@ -112,7 +126,7 @@ namespace MappingTiles
             }
         }
 
-        virtual protected void CleanUp()
+        protected virtual void CleanUp()
         {
             if (tileDatas.Count <= MaxTiles)
             {
@@ -123,7 +137,10 @@ namespace MappingTiles
             if (keepTileInMemory != null)
             {
                 var tilesToKeep = queriedDatas.Keys.Where(keepTileInMemory).ToList();
-                foreach (var index in tilesToKeep) queriedDatas[index] = DateTime.Now; // touch tiles to keep
+                foreach (var index in tilesToKeep)
+                {
+                    queriedDatas[index] = DateTime.Now; // touch tiles to keep
+                }
                 numberOfTilesToKeepInMemory = tilesToKeep.Count;
             }
 
@@ -132,15 +149,6 @@ namespace MappingTiles
             foreach (var oldItem in oldItems)
             {
                 Remove(oldItem.Key);
-            }
-        }
-
-        protected virtual void OnNotifyPropertyChange(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -155,6 +163,15 @@ namespace MappingTiles
             queriedDatas.Clear();
             tileDatas.Clear();
             isDisposed = true;
+        }
+
+        protected virtual void OnNotifyPropertyChange(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         private void DisposeTilesIfDisposable()
