@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace MappingTiles
 {
-    public class FileTileCache<byte[]> : ITileCache<byte[]>
+    public class FileTileCache : ITileCache<byte[]>
     {
         private readonly ReaderWriterLockSlim readerWriterLocker = new ReaderWriterLockSlim();
 
