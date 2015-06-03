@@ -1,38 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 
 namespace MappingTiles
 {
-    public class FileTileCache<T> : ITileCache<T>
+    public class FileTileCache<byte[]> : ITileCache<byte[]>
     {
         private readonly ReaderWriterLockSlim readerWriterLocker = new ReaderWriterLockSlim();
-        private readonly string directory;
-        private readonly string format;
-        private readonly TimeSpan cacheExpireTime;
 
-        /// <remarks>
-        /// The constructor creates the storage _directory if it does not exist.
-        /// </remarks>
-        public FileTileCache(string directory, string format)
+        private readonly string directory;
+        private readonly TileFormat format;
+        private TimeSpan expireTime;
+
+        public FileTileCache()
+            : this(Path.Combine(Path.GetTempPath(), Utilities.CreateUniqueId()), TileFormat.Png, TimeSpan.Zero)
+        {
+        }
+
+        public FileTileCache(string directory)
+            : this(directory, TileFormat.Png, TimeSpan.Zero)
+        {
+        }
+
+        public FileTileCache(string directory, TileFormat format)
             : this(directory, format, TimeSpan.Zero)
         {
         }
 
-        /// <remarks>
-        ///   The constructor creates the storage _directory if it does not exist.
-        /// </remarks>
-        public FileTileCache(string directory, string format, TimeSpan cacheExpireTime)
+        public FileTileCache(string directory, TileFormat format, TimeSpan expireTime)
         {
             this.directory = directory;
             this.format = format;
-            this.cacheExpireTime = cacheExpireTime;
+            this.ExpireTime = expireTime;
 
             if (!Directory.Exists(directory))
             {
@@ -40,22 +40,28 @@ namespace MappingTiles
             }
         }
 
-        public void Add(string id, T tile)
+        public TimeSpan ExpireTime
+        {
+            get { return expireTime; }
+            set { expireTime = value; }
+        }
+
+        public void Add(TileInfo tileInfo, byte[] data)
         {
             try
             {
                 readerWriterLocker.EnterWriteLock();
-                if (Exists(index))
+                if (Exists(tileInfo))
                 {
-                    return; // ignore
+                    return;
                 }
-                string dir = GetDirectoryName(index);
-                if (!Directory.Exists(dir))
+                string directory = GetDirectoryName(tileInfo);
+                if (!Directory.Exists(directory))
                 {
-                    Directory.CreateDirectory(dir);
+                    Directory.CreateDirectory(directory);
                 }
 
-                WriteToFile(image, index);
+                WriteToFile(data, tileInfo);
             }
             finally
             {
@@ -63,14 +69,14 @@ namespace MappingTiles
             }
         }
 
-        public void Remove(string id)
+        public void Remove(TileInfo tileInfo)
         {
             try
             {
                 readerWriterLocker.EnterWriteLock();
-                if (Exists(index))
+                if (Exists(tileInfo))
                 {
-                    File.Delete(GetFileName(index));
+                    File.Delete(GetCachedTileFilePathName(tileInfo));
                 }
             }
             finally
@@ -79,13 +85,17 @@ namespace MappingTiles
             }
         }
 
-        public T Get(string id)
+        public byte[] Get(TileInfo tileInfo)
         {
             try
             {
                 readerWriterLocker.EnterReadLock();
-                if (!Exists(index)) return null; // to indicate not found
-                return File.ReadAllBytes(GetFileName(index));
+                if (!Exists(tileInfo))
+                {
+                    return null;
+                }
+
+                return File.ReadAllBytes(GetCachedTileFilePathName(tileInfo));
             }
             finally
             {
@@ -93,35 +103,33 @@ namespace MappingTiles
             }
         }
 
-        public bool Exists(TileIndex index)
+        public bool Exists(TileInfo tileInfo)
         {
-            if (File.Exists(GetFileName(index)))
+            if (File.Exists(GetCachedTileFilePathName(tileInfo)))
             {
-                return cacheExpireTime == TimeSpan.Zero || (DateTime.Now - new FileInfo(GetFileName(index)).LastWriteTime) <= cacheExpireTime;
+                return expireTime == TimeSpan.Zero || (DateTime.Now - new FileInfo(GetCachedTileFilePathName(tileInfo)).LastWriteTime) <= expireTime;
             }
+
             return false;
         }
 
 
-        public string GetFileName(string id)
+        public string GetCachedTileFilePathName(TileInfo tileInfo)
         {
-            return Path.Combine(GetDirectoryName(id), string.Format(CultureInfo.InvariantCulture, "{0}.{1}", id.Row, format));
+            return Path.Combine(GetDirectoryName(tileInfo), string.Format(CultureInfo.InvariantCulture, "{0}.{1}", tileInfo.Row, format.ToString()));
         }
 
-        private string GetDirectoryName(string index)
+        private string GetDirectoryName(TileInfo tileInfo)
         {
-            var level = index.Level.ToString(CultureInfo.InvariantCulture);
-            level = level.Replace(':', '_');
-            return Path.Combine(directory,
-                level,
-                index.Col.ToString(CultureInfo.InvariantCulture));
+            string level = tileInfo.ZoomLevel.Id.ToString(CultureInfo.InvariantCulture);
+            return Path.Combine(directory, level, tileInfo.Column.ToString(CultureInfo.InvariantCulture));
         }
 
-        private void WriteToFile(byte[] image, string id)
+        private void WriteToFile(byte[] data, TileInfo tileInfo)
         {
-            using (FileStream fileStream = File.Open(GetFileName(id), FileMode.Create))
+            using (FileStream fileStream = File.Open(GetCachedTileFilePathName(tileInfo), FileMode.Create))
             {
-                fileStream.Write(image, 0, image.Length);
+                fileStream.Write(data, 0, data.Length);
                 fileStream.Flush();
                 fileStream.Close();
             }
