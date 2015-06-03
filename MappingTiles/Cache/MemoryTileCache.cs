@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 
 namespace MappingTiles
@@ -10,9 +11,9 @@ namespace MappingTiles
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly object syncLocker = new object();
-        private readonly Dictionary<string, T> tileDatas = new Dictionary<string, T>();
-        private readonly Dictionary<string, DateTime> queriedDatas = new Dictionary<string, DateTime>();
-        private readonly Func<string, bool> keepTileInMemory;
+        private readonly Dictionary<TileInfo, T> tileDatas = new Dictionary<TileInfo, T>();
+        private readonly Dictionary<TileInfo, DateTime> queriedDatas = new Dictionary<TileInfo, DateTime>();
+        private readonly Func<TileInfo, bool> keepTileInMemory;
 
         private bool isDisposed;
 
@@ -21,7 +22,11 @@ namespace MappingTiles
         {
         }
 
-        public MemoryTileCache(int minTiles, int maxTiles, Func<string, bool> keepTileInMemory)
+        public MemoryTileCache(int maxTiles)
+            : this(Math.Min(50, maxTiles), Math.Max(50, maxTiles), null)
+        { }
+
+        public MemoryTileCache(int minTiles, int maxTiles, Func<TileInfo, bool> keepTileInMemory)
         {
             if (minTiles >= maxTiles)
             {
@@ -36,9 +41,12 @@ namespace MappingTiles
                 throw new ArgumentException("maxTiles should be larger than zero");
             }
 
-            MinTiles = minTiles;
-            MaxTiles = maxTiles;
+            this.MinTiles = minTiles;
+            this.MaxTiles = maxTiles;
+
             this.keepTileInMemory = keepTileInMemory;
+            this.tileDatas = new Dictionary<TileInfo, T>();
+            this.queriedDatas = new Dictionary<TileInfo, DateTime>();
         }
 
         public int TileCount
@@ -61,57 +69,89 @@ namespace MappingTiles
             set;
         }
 
-        public void Add(string id, T item)
+        public void Add(TileInfo tileInfo, T data)
         {
             lock (syncLocker)
             {
-                if (tileDatas.ContainsKey(id))
+                if (tileDatas.ContainsKey(tileInfo))
                 {
-                    tileDatas[id] = item;
-                    queriedDatas[id] = DateTime.Now;
+                    tileDatas[tileInfo] = data;
+                    queriedDatas[tileInfo] = DateTime.Now;
                 }
                 else
                 {
-                    queriedDatas.Add(id, DateTime.Now);
-                    tileDatas.Add(id, item);
+                    queriedDatas.Add(tileInfo, DateTime.Now);
+                    tileDatas.Add(tileInfo, data);
                     CleanUp();
                     OnNotifyPropertyChange("TileCount");
                 }
             }
         }
 
-        public void Remove(string id)
+        public void Remove(int column, int row, ZoomLevel zoomLevel)
+        {
+            Remove(column, row, zoomLevel.Id);
+        }
+
+        public void Remove(int column, int row, string zoomLevelId)
+        {
+            string id = string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", column, row, zoomLevelId);
+            var queriedTile = queriedDatas.Keys.Where(key => key.Id.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (queriedTile != null)
+            {
+                Remove(queriedTile);
+            }
+        }
+
+        public void Remove(TileInfo tileInfo)
         {
             lock (syncLocker)
             {
-                if (!tileDatas.ContainsKey(id))
+                if (!tileDatas.ContainsKey(tileInfo))
                 {
                     return;
                 }
 
-                var disposable = (tileDatas[id] as IDisposable);
+                var disposable = (tileDatas[tileInfo] as IDisposable);
                 if (disposable != null)
                 {
                     disposable.Dispose();
                 }
 
-                queriedDatas.Remove(id);
-                tileDatas.Remove(id);
+                queriedDatas.Remove(tileInfo);
+                tileDatas.Remove(tileInfo);
                 OnNotifyPropertyChange("TileCount");
             }
         }
 
-        public T Get(string id)
+        public T Get(int column, int row, ZoomLevel zoomLevel)
+        {
+            return Get(column, row, zoomLevel.Id);
+        }
+
+        public T Get(int column, int row, string zoomLevelId)
+        {
+            string id = string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", column, row, zoomLevelId);
+            var queriedTile = queriedDatas.Keys.Where(key => key.Id.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            if (queriedTile != null)
+            {
+                return Get(queriedTile);
+            }
+
+            return default(T);
+        }
+
+        public T Get(TileInfo tileInfo)
         {
             lock (syncLocker)
             {
-                if (!tileDatas.ContainsKey(id))
+                if (!tileDatas.ContainsKey(tileInfo))
                 {
                     return default(T);
                 }
-                queriedDatas[id] = DateTime.Now;
+                queriedDatas[tileInfo] = DateTime.Now;
 
-                return tileDatas[id];
+                return tileDatas[tileInfo];
             }
         }
 
@@ -123,32 +163,6 @@ namespace MappingTiles
                 queriedDatas.Clear();
                 tileDatas.Clear();
                 OnNotifyPropertyChange("TileCount");
-            }
-        }
-
-        protected virtual void CleanUp()
-        {
-            if (tileDatas.Count <= MaxTiles)
-            {
-                return;
-            }
-
-            var numberOfTilesToKeepInMemory = 0;
-            if (keepTileInMemory != null)
-            {
-                var tilesToKeep = queriedDatas.Keys.Where(keepTileInMemory).ToList();
-                foreach (var index in tilesToKeep)
-                {
-                    queriedDatas[index] = DateTime.Now; // touch tiles to keep
-                }
-                numberOfTilesToKeepInMemory = tilesToKeep.Count;
-            }
-
-            var numberOfTilesToRemove = tileDatas.Count - Math.Max(MinTiles, numberOfTilesToKeepInMemory);
-            var oldItems = queriedDatas.OrderBy(p => p.Value).Take(numberOfTilesToRemove);
-            foreach (var oldItem in oldItems)
-            {
-                Remove(oldItem.Key);
             }
         }
 
@@ -179,7 +193,36 @@ namespace MappingTiles
             foreach (var index in tileDatas.Keys)
             {
                 var bitmap = (tileDatas[index] as IDisposable);
-                if (bitmap != null) bitmap.Dispose();
+                if (bitmap != null)
+                {
+                    bitmap.Dispose();
+                }
+            }
+        }
+
+        private void CleanUp()
+        {
+            if (tileDatas.Count <= MaxTiles)
+            {
+                return;
+            }
+
+            var numberOfTilesToKeepInMemory = 0;
+            if (keepTileInMemory != null)
+            {
+                var tilesToKeep = queriedDatas.Keys.Where(keepTileInMemory).ToList();
+                foreach (var index in tilesToKeep)
+                {
+                    queriedDatas[index] = DateTime.Now; // touch tiles to keep
+                }
+                numberOfTilesToKeepInMemory = tilesToKeep.Count;
+            }
+
+            var numberOfTilesToRemove = tileDatas.Count - Math.Max(MinTiles, numberOfTilesToKeepInMemory);
+            var oldItems = queriedDatas.OrderBy(p => p.Value).Take(numberOfTilesToRemove);
+            foreach (var oldItem in oldItems)
+            {
+                Remove(oldItem.Key);
             }
         }
     }

@@ -24,6 +24,10 @@ namespace MappingTiles
             InitilizeColumnRowWithBounds();
         }
 
+        public TileInfo(int column, int row, double resolution)
+            : this(column, row, resolution, new Wgs84TileSchema())
+        { }
+
         public TileInfo(int column, int row, double resolution, TileSchema tileSchema)
         {
             Width = 256;
