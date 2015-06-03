@@ -61,6 +61,7 @@
     <Compile Include="Source\OpenStreetMapType.cs" />
     <Compile Include="Source\Source.cs" />
     <Compile Include="Source\TileSource.cs" />
+    <Compile Include="TileRequest\ImageTileDownloader.cs" />
     <Compile Include="TileRequest\RequestPool\AsyncTileRequest.cs" />
     <Compile Include="TileRequest\RequestPool\AsyncTileRequestCompletedHandler.cs" />
     <Compile Include="TileRequest\RequestPool\AsyncTileRequestQueue.cs" />
