@@ -52,6 +52,9 @@
     <Compile Include="BaseType\Pixel.cs" />
     <Compile Include="BaseType\Point.cs" />
     <Compile Include="BaseType\ZoomLevel.cs" />
+    <Compile Include="Cache\FileTileCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Cache\ITileCache.cs" />
     <Compile Include="Cache\MemoryTileCache.cs" />
     <Compile Include="Miscellaneous\InternalChecker.cs" />

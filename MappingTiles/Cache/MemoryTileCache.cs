@@ -11,10 +11,10 @@ namespace MappingTiles
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly object syncLocker = new object();
-        private readonly Dictionary<TileInfo, T> tileDatas = new Dictionary<TileInfo, T>();
-        private readonly Dictionary<TileInfo, DateTime> queriedDatas = new Dictionary<TileInfo, DateTime>();
-        private readonly Func<TileInfo, bool> keepTileInMemory;
 
+        private readonly Dictionary<TileInfo, T> tileDatas;
+        private readonly Dictionary<TileInfo, DateTime> queriedDatas;
+        private readonly Func<TileInfo, bool> keepTileInMemory;
         private bool isDisposed;
 
         public MemoryTileCache()
