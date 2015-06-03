@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace MappingTiles
 {
-    public class AsyncTileRequestQueue : IDisposable
+    internal class AsyncTileRequestQueue : IDisposable
     {
         private static int MaxSimultaneousRequests;
         private static AsyncTileRequestQueue instance;

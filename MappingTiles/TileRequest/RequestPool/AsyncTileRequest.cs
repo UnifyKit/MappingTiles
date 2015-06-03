@@ -2,7 +2,7 @@
 
 namespace MappingTiles
 {
-    public class AsyncTileRequest
+    internal class AsyncTileRequest
     {
 		private Uri uri;
 		private bool isAborted;
