@@ -4,3 +4,13 @@ A C# open source library to create the tile schema for <a href="http://www.openg
 ## .NET Framework Version
 
 .Net Framework 3.5
+
+## Supports the following platforms:
+
+× .NET 4+
+× Silverlight 5
+× Windows Phone 8+
+× .NET for Windows Store apps (WinRT)
+× Windows Universal Apps
+× Xamarin.iOS
+× Xamarin.Android
