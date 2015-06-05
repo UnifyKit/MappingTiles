@@ -14,7 +14,7 @@ namespace MappingTiles
             : this(OpenStreetMapType.Standard)
         { }
 
-        public OpenStreetMapTileSource(OpenStreetMapType mapType = OpenStreetMapType.Standard)
+        public OpenStreetMapTileSource(OpenStreetMapType mapType)
         {
             MapType = mapType;
             InitializeTileSchema(MapType);
