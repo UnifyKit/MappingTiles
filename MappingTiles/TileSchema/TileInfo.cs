@@ -94,7 +94,7 @@ namespace MappingTiles
             private set { tileSchema = value; }
         }
 
-        public Pixel GetViewPortPosition(int viewPortWidth, int viewPortHeight)
+        public Pixel GetDrawingPosition(int viewPortWidth, int viewPortHeight)
         {
             InternalChecker.CheckParameterIsNull(Schema, "Schema");
             InternalChecker.CheckParameterIsNull(ZoomLevel, "ZoomLevel");
