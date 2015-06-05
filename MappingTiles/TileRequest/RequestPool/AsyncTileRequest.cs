@@ -4,10 +4,10 @@ namespace MappingTiles
 {
     internal class AsyncTileRequest
     {
-		private Uri uri;
-		private bool isAborted;
-		private NetworkPriority networkPriority;
-		private AsyncTileRequestCompletedHandler callback;
+        private Uri uri;
+        private bool isAborted;
+        private NetworkPriority networkPriority;
+        private AsyncTileRequestCompletedHandler callback;
 
         private AsyncTileRequest()
         { }
@@ -30,43 +30,47 @@ namespace MappingTiles
             }
         }
 
-		public bool IsAborted
-		{
-			get
-			{
-				return isAborted;
-			}
-		}
+        public bool IsAborted
+        {
+            get
+            {
+                return isAborted;
+            }
+            internal set
+            {
+                IsAborted = value;
+            }
+        }
 
-		public AsyncTileRequestCompletedHandler Callback
-		{
-			get
-			{
-				return this.callback;
-			}
-		}
+        public AsyncTileRequestCompletedHandler Callback
+        {
+            get
+            {
+                return this.callback;
+            }
+        }
 
-		public NetworkPriority NetworkPriority
-		{
-			get
-			{
-				return this.networkPriority;
-			}
-			set
-			{
-				this.networkPriority = value;
-			}
-		}
+        public NetworkPriority NetworkPriority
+        {
+            get
+            {
+                return this.networkPriority;
+            }
+            set
+            {
+                this.networkPriority = value;
+            }
+        }
 
-		internal NetworkPriority NetworkPrioritySnapshot
-		{
-			get;
-			set;
-		}
+        internal NetworkPriority NetworkPrioritySnapshot
+        {
+            get;
+            set;
+        }
 
-		public void AbortIfInQueue()
-		{
-			this.isAborted = true;
-		}
+        public void AbortIfInQueue()
+        {
+            this.isAborted = true;
+        }
     }
 }
