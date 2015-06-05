@@ -123,6 +123,9 @@
   <data name="CollectionNullOrEmpty" xml:space="preserve">
     <value>The input parameter or the collection used for query is null or empty. </value>
   </data>
+  <data name="TileInProgressCancel" xml:space="preserve">
+    <value>The tile just can be cancelled when the download is in progress</value>
+  </data>
   <data name="ValueOutOfRange" xml:space="preserve">
     <value>The input value is out of the range.</value>
   </data>

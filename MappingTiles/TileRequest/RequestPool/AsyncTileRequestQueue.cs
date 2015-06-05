@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Threading;
-using System.Windows.Media.Imaging;
 
 namespace MappingTiles
 {
-    public class AsyncTileRequestQueue : IDisposable
+    internal class AsyncTileRequestQueue : IDisposable
     {
         private static int MaxSimultaneousRequests;
         private static AsyncTileRequestQueue instance;
@@ -89,7 +87,7 @@ namespace MappingTiles
                 this.executingRequests.Remove(key);
                 this.thereMayBeWorkToDo.Set();
             }
-            BitmapImage bitmapImage = null;
+            byte[] requestBitmap = null;
             Exception error = e.Error;
             if (error == null)
             {
@@ -101,22 +99,16 @@ namespace MappingTiles
                     }
                     else
                     {
-                        bitmapImage = new BitmapImage();
-                        bitmapImage.BeginInit();
-                        bitmapImage.StreamSource = new MemoryStream(e.Result);
-                        bitmapImage.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable);
-                        bitmapImage.CacheOption = BitmapCacheOption.None;
-                        bitmapImage.EndInit();
-                        bitmapImage.Freeze();
+                        requestBitmap = e.Result;
                     }
                 }
                 catch (Exception exception)
                 {
                     error = exception;
-                    bitmapImage = null;
+                    requestBitmap = null;
                 }
             }
-            key.Callback(bitmapImage, error);
+            key.Callback(requestBitmap, error);
 
             ((WebClient)sender).Dispose();
         }
