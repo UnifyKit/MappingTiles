@@ -44,29 +44,16 @@ namespace MappingTiles
 
         public override void DownloadTile(TileInfo tileInfo)
         {
-            AsyncTileRequest tileRequest;
-            Uri uri = this.tileUriDelegate(tileId);
-            if (uri == null)
-            {
-                tileAvailableDelegate(null, new Rect(), null, token);
-                return;
-            }
-            if (this.tileRequests.TryGetValue(tileId, out tileRequest))
+            AsyncTileRequest tileRequest = null;
+            if (this.tileRequests.TryGetValue(tileInfo, out tileRequest))
             {
                 throw new InvalidOperationException("Multiple concurrent downloads of the same tile is not supported.");
             }
-            Dictionary<TileId, GenericRasterTileDownloader.TileRequest> tileIds = this.tileRequests;
-            GenericRasterTileDownloader.TileRequest tileRequest1 = new GenericRasterTileDownloader.TileRequest()
-            {
-                TileId = tileId,
-                Token = token,
-                TileEdgeFlags = tileEdgeFlags,
-                TileAvailableDelegate = tileAvailableDelegate
-            };
-            GenericRasterTileDownloader.TileRequest tileRequest2 = tileRequest1;
-            tileRequest = tileRequest2;
-            tileIds[tileId] = tileRequest2;
-            tileRequest.WebRequest = BitmapImageRequestQueue.Instance.CreateRequest(uri, (NetworkPriority)priority, tileRequest, new BitmapImageRequestCompletedHandler(this.TileDownloadCompleted));
+            else
+            { 
+            }
+
+            //AsyncTileRequestQueue.Instance.CreateRequest()
         }   
 
         public override void UpdateTileDownloadPriority(TileInfo tileInfo, int priority)
