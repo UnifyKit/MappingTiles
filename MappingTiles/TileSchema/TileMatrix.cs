@@ -5,7 +5,7 @@ namespace MappingTiles
 {
     public class TileMatrix
     {
-        protected TileMatrix()
+        private TileMatrix()
         { }
 
         public TileMatrix(double resolution, TileSchema tileScehma)
@@ -17,6 +17,9 @@ namespace MappingTiles
             this.ZoomLevel = new ZoomLevel(resolution);
             this.TileSchema = tileSchema;
             this.Id = id;
+
+            this.TileWidth = 256;
+            this.TileHeight = 256;
         }
 
         public string Id
@@ -63,8 +66,10 @@ namespace MappingTiles
         /// </summary>
         public int Width
         {
-            get;
-            set;
+            get
+            {
+                return (int)Math.Ceiling(TileSchema.BoundingBox.Width / ZoomLevel.Resolution);
+            }
         }
 
         /// <summary>
@@ -72,8 +77,10 @@ namespace MappingTiles
         /// </summary>
         public int Height
         {
-            get;
-            set;
+            get
+            {
+                return (int)Math.Ceiling(TileSchema.BoundingBox.Height / ZoomLevel.Resolution);
+            }
         }
 
         public Collection<TileInfo> GetTiles(BoundingBox boundingBox)
@@ -90,7 +97,7 @@ namespace MappingTiles
                 var lastCol = (int)Math.Ceiling((boundingBox.MaxX - TileSchema.BoundingBox.MinX) / tileWorldUnits);
                 var lastRow = (int)Math.Ceiling((-boundingBox.MinY + TileSchema.BoundingBox.MaxY) / tileWorldUnits);
 
-                tileRange= new TileRange(firstCol, firstRow, lastCol - firstCol, lastRow - firstRow);
+                tileRange = new TileRange(firstCol, firstRow, lastCol - firstCol, lastRow - firstRow);
             }
             else
             {
@@ -113,7 +120,7 @@ namespace MappingTiles
             return tiles;
         }
 
-        public BoundingBox GetTilesBoundingBox(TileRange range)
+        public BoundingBox GetBoundingBox(TileRange range)
         {
             var resolution = ZoomLevel.Resolution;
             if (TileSchema.IsYAxisReversed)
