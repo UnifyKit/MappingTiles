@@ -1,7 +1,7 @@
 ﻿
 namespace MappingTiles
 {
-    public enum NetworkPriority
+    internal enum NetworkPriority
     {
         Idle = -2147483648,
         Low = -1000,
