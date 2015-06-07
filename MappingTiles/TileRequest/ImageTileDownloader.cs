@@ -8,7 +8,7 @@ namespace MappingTiles
 {
     public class ImageTileDownloader : TileDownloader
     {
-        private Dictionary<TileInfo, AsyncTileRequest> tileRequests;
+        private Dictionary<TileSource, AsyncTileRequest> tileRequests;
         private Dispatcher uiDispatcher;
         private TileSchema tileSchema;
 
@@ -22,7 +22,7 @@ namespace MappingTiles
             this.tileSchema = tileSchema;
             this.uiDispatcher = uiDispatcher;
 
-            tileRequests = new Dictionary<TileInfo, AsyncTileRequest>();
+            tileRequests = new Dictionary<TileSource, AsyncTileRequest>();
         }
 
         public TileSchema TileSchema
@@ -30,44 +30,27 @@ namespace MappingTiles
             get { return tileSchema; }
         }
 
-        public override void CancelTileDownload(TileInfo tileInfo)
+        public override void CancelTileDownload(TileSource tileSource)
         {
             AsyncTileRequest tileRequest;
-            if (!this.tileRequests.TryGetValue(tileInfo, out tileRequest))
+            if (!this.tileRequests.TryGetValue(tileSource, out tileRequest))
             {
                 throw new InvalidOperationException(ApplicationMessages.TileInProgressCancel);
             }
             tileRequest.IsAborted = true;
             tileRequest.AbortIfInQueue();
-            tileRequests.Remove(tileInfo);
+            tileRequests.Remove(tileSource);
         }
 
-        public override void DownloadTile(TileInfo tileInfo)
+        public override void DownloadTile(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority)
         {
             AsyncTileRequest tileRequest;
-            Uri uri = this.tileUriDelegate(tileId);
-            if (uri == null)
-            {
-                tileAvailableDelegate(null, new Rect(), null, token);
-                return;
-            }
-            if (this.tileRequests.TryGetValue(tileId, out tileRequest))
+            if (this.tileRequests.TryGetValue(tileSource, out tileRequest))
             {
                 throw new InvalidOperationException("Multiple concurrent downloads of the same tile is not supported.");
             }
-            Dictionary<TileId, GenericRasterTileDownloader.TileRequest> tileIds = this.tileRequests;
-            GenericRasterTileDownloader.TileRequest tileRequest1 = new GenericRasterTileDownloader.TileRequest()
-            {
-                TileId = tileId,
-                Token = token,
-                TileEdgeFlags = tileEdgeFlags,
-                TileAvailableDelegate = tileAvailableDelegate
-            };
-            GenericRasterTileDownloader.TileRequest tileRequest2 = tileRequest1;
-            tileRequest = tileRequest2;
-            tileIds[tileId] = tileRequest2;
-            tileRequest.WebRequest = BitmapImageRequestQueue.Instance.CreateRequest(uri, (NetworkPriority)priority, tileRequest, new BitmapImageRequestCompletedHandler(this.TileDownloadCompleted));
-        }   
+            AsyncTileRequestQueue.Instance.CreateRequest(tileSource.GetUri(tileInfo), networkPriority, callback);
+        }
 
         public override void UpdateTileDownloadPriority(TileInfo tileInfo, int priority)
         {
