@@ -52,9 +52,13 @@ namespace MappingTiles
             AsyncTileRequestQueue.Instance.CreateRequest(tileSource.GetUri(tileInfo), networkPriority, callback);
         }
 
-        public override void UpdateTileDownloadPriority(TileInfo tileInfo, int priority)
+        public override void UpdateTileDownloadPriority(TileSource tileSource, int priority)
         {
-            throw new NotImplementedException();
+            AsyncTileRequest tileRequest;
+            if (this.tileRequests.TryGetValue(tileSource, out tileRequest))
+            {
+                tileRequest.NetworkPriority = (NetworkPriority)priority;
+            }
         }
     }
 }

@@ -15,6 +15,6 @@ namespace MappingTiles
 
         public abstract void DownloadTile(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority);
 
-        public abstract void UpdateTileDownloadPriority(TileInfo tileInfo, int priority);
+        public abstract void UpdateTileDownloadPriority(TileSource tileSource, int priority);
     }
 }
