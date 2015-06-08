@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Threading;
 
 namespace MappingTiles
 {
-    public class ImageTileDownloader : TileDownloader
+    internal class ImageTileDownloader : TileDownloader
     {
-        private Dictionary<TileInfo, AsyncTileRequest> tileRequests;
+        private Dictionary<TileSource, AsyncTileRequest> tileRequests;
         private Dispatcher uiDispatcher;
         private TileSchema tileSchema;
 
@@ -22,7 +20,7 @@ namespace MappingTiles
             this.tileSchema = tileSchema;
             this.uiDispatcher = uiDispatcher;
 
-            tileRequests = new Dictionary<TileInfo, AsyncTileRequest>();
+            tileRequests = new Dictionary<TileSource, AsyncTileRequest>();
         }
 
         public TileSchema TileSchema
@@ -30,35 +28,35 @@ namespace MappingTiles
             get { return tileSchema; }
         }
 
-        public override void CancelTileDownload(TileInfo tileInfo)
+        public override void CancelTileDownload(TileSource tileSource)
         {
             AsyncTileRequest tileRequest;
-            if (!this.tileRequests.TryGetValue(tileInfo, out tileRequest))
+            if (!this.tileRequests.TryGetValue(tileSource, out tileRequest))
             {
                 throw new InvalidOperationException(ApplicationMessages.TileInProgressCancel);
             }
             tileRequest.IsAborted = true;
             tileRequest.AbortIfInQueue();
-            tileRequests.Remove(tileInfo);
+            tileRequests.Remove(tileSource);
         }
 
-        public override void DownloadTile(TileInfo tileInfo)
+        public override void DownloadTile(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority)
         {
-            AsyncTileRequest tileRequest = null;
-            if (this.tileRequests.TryGetValue(tileInfo, out tileRequest))
+            AsyncTileRequest tileRequest;
+            if (this.tileRequests.TryGetValue(tileSource, out tileRequest))
             {
                 throw new InvalidOperationException("Multiple concurrent downloads of the same tile is not supported.");
             }
-            else
-            { 
-            }
+            AsyncTileRequestQueue.Instance.CreateRequest(tileSource.GetUri(tileInfo), networkPriority, callback);
+        }
 
-            //AsyncTileRequestQueue.Instance.CreateRequest()
-        }   
-
-        public override void UpdateTileDownloadPriority(TileInfo tileInfo, int priority)
+        public override void UpdateTileDownloadPriority(TileSource tileSource, int priority)
         {
-            throw new NotImplementedException();
+            AsyncTileRequest tileRequest;
+            if (this.tileRequests.TryGetValue(tileSource, out tileRequest))
+            {
+                tileRequest.NetworkPriority = (NetworkPriority)priority;
+            }
         }
     }
 }

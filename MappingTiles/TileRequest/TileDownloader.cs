@@ -1,15 +1,20 @@
 ﻿
 namespace MappingTiles
 {
-    public abstract class TileDownloader
+    internal abstract class TileDownloader
     {
         protected TileDownloader()
-        {}
+        { }
 
-		public abstract void CancelTileDownload(TileInfo tileInfo);
+        public abstract void CancelTileDownload(TileSource tileSource);
 
-		public abstract void DownloadTile(TileInfo tileInfo);
+        public void DownloadTile(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback)
+        {
+            DownloadTile(tileInfo, tileSource, callback, NetworkPriority.Normal);
+        }
 
-		public abstract void UpdateTileDownloadPriority(TileInfo tileInfo, int priority);
+        public abstract void DownloadTile(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority);
+
+        public abstract void UpdateTileDownloadPriority(TileSource tileSource, int priority);
     }
 }

@@ -58,6 +58,12 @@
     <Compile Include="Miscellaneous\InternalChecker.cs" />
     <Compile Include="Miscellaneous\Utilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\BingMapsTileSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Source\BingMapsType.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Source\OpenStreetMapTileSource.cs" />
     <Compile Include="Source\OpenStreetMapType.cs" />
     <Compile Include="Source\Source.cs" />
@@ -83,7 +89,9 @@
       <LastGenOutput>ApplicationMessages.Designer.cs</LastGenOutput>
     </CodeAnalysisDictionary>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

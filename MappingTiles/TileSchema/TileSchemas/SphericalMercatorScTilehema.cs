@@ -25,6 +25,7 @@ namespace MappingTiles
         {
             TileFormat = format;
             Crs = "EPSG:3857";
+            IsYAxisReversed = true;
             foreach (var zoomLevel in zoomLevels)
             {
                 ZoomLevels.Add(zoomLevel);
