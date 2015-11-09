@@ -6,15 +6,15 @@ namespace MappingTiles
         protected TileDownloader()
         { }
 
-        public abstract void CancelTileDownload(TileSource tileSource);
+        public abstract void Cancel(TileSource tileSource);
 
-        public void DownloadTile(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback)
+        public void Download(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback)
         {
-            DownloadTile(tileInfo, tileSource, callback, NetworkPriority.Normal);
+            Download(tileInfo, tileSource, callback, NetworkPriority.Normal);
         }
 
-        public abstract void DownloadTile(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority);
+        public abstract void Download(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority);
 
-        public abstract void UpdateTileDownloadPriority(TileSource tileSource, int priority);
+        public abstract void UpdateDownloadPriority(TileSource tileSource, int priority);
     }
 }

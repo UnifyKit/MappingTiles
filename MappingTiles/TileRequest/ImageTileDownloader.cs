@@ -28,7 +28,7 @@ namespace MappingTiles
             get { return tileSchema; }
         }
 
-        public override void CancelTileDownload(TileSource tileSource)
+        public override void Cancel(TileSource tileSource)
         {
             AsyncTileRequest tileRequest;
             if (!this.tileRequests.TryGetValue(tileSource, out tileRequest))
@@ -40,7 +40,7 @@ namespace MappingTiles
             tileRequests.Remove(tileSource);
         }
 
-        public override void DownloadTile(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority)
+        public override void Download(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority)
         {
             AsyncTileRequest tileRequest;
             if (this.tileRequests.TryGetValue(tileSource, out tileRequest))
@@ -50,7 +50,7 @@ namespace MappingTiles
             AsyncTileRequestQueue.Instance.CreateRequest(tileSource.GetUri(tileInfo), networkPriority, callback);
         }
 
-        public override void UpdateTileDownloadPriority(TileSource tileSource, int priority)
+        public override void UpdateDownloadPriority(TileSource tileSource, int priority)
         {
             AsyncTileRequest tileRequest;
             if (this.tileRequests.TryGetValue(tileSource, out tileRequest))
