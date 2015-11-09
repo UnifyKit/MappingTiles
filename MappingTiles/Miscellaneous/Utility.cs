@@ -5,13 +5,13 @@ using System.Reflection;
 
 namespace MappingTiles
 {
-    public static class Utilities
+    public static class Utility
     {
         public static string Version
         {
             get
             {
-                string name = typeof(Utilities).Assembly.FullName;
+                string name = typeof(Utility).Assembly.FullName;
                 AssemblyName assemblyName = new AssemblyName(name);
 
                 return string.Format(CultureInfo.InvariantCulture,"{0}.{1}" ,assemblyName.Version.Major,assemblyName.Version.Minor);

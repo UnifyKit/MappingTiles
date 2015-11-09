@@ -14,7 +14,7 @@ namespace MappingTiles
         private TimeSpan expireTime;
 
         public FileTileCache()
-            : this(Path.Combine(Path.GetTempPath(), Utilities.CreateUniqueId()), TileFormat.Png, TimeSpan.Zero)
+            : this(Path.Combine(Path.GetTempPath(), Utility.CreateUniqueId()), TileFormat.Png, TimeSpan.Zero)
         {
         }
 

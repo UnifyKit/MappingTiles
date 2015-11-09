@@ -9,7 +9,7 @@ namespace MappingTiles
         { }
 
         public TileMatrix(double resolution, TileSchema tileScehma)
-            : this(resolution, tileScehma, Utilities.CreateUniqueId())
+            : this(resolution, tileScehma, Utility.CreateUniqueId())
         { }
 
         public TileMatrix(double resolution, TileSchema tileSchema, string id)

@@ -16,11 +16,11 @@ namespace MappingTiles
         private int screenDpi;
 
         public ZoomLevel()
-            : this(ResolutionOfZoomLevel0,Utilities.CreateUniqueId())
+            : this(ResolutionOfZoomLevel0,Utility.CreateUniqueId())
         { }
 
         public ZoomLevel(double resolution)
-            : this(resolution, Utilities.CreateUniqueId())
+            : this(resolution, Utility.CreateUniqueId())
         { }
 
         public ZoomLevel(double resolution, string id)

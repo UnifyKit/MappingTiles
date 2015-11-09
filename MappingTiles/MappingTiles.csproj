@@ -56,7 +56,7 @@
     <Compile Include="Cache\ITileCache.cs" />
     <Compile Include="Cache\MemoryTileCache.cs" />
     <Compile Include="Miscellaneous\InternalChecker.cs" />
-    <Compile Include="Miscellaneous\Utilities.cs" />
+    <Compile Include="Miscellaneous\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\BingMapsTileSource.cs">
       <SubType>Code</SubType>
