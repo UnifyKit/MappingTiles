@@ -26,11 +26,10 @@ namespace MappingTiles
             this.pendingRequests = new List<AsyncTileRequest>();
             this.executingRequests = new Dictionary<AsyncTileRequest, WebClient>();
             this.thereMayBeWorkToDo = new ManualResetEvent(true);
-            Thread thread = new Thread(new ThreadStart(this.DownloadThreadStart))
+            this.downloadThread = new Thread(new ThreadStart(this.DownloadThreadStart))
             {
                 IsBackground = true
             };
-            this.downloadThread = thread;
             this.downloadThread.Start();
         }
 
@@ -48,12 +47,10 @@ namespace MappingTiles
 
         public AsyncTileRequest CreateRequest(Uri uri, NetworkPriority networkPriority, AsyncTileRequestCompletedHandler callback)
         {
-            AsyncTileRequest TileRequest = new AsyncTileRequest(uri, callback)
+            AsyncTileRequest tempTileRequest = new AsyncTileRequest(uri, callback)
             {
                 NetworkPriority = networkPriority
             };
-
-            AsyncTileRequest tempTileRequest = TileRequest;
             lock (this.pendingRequests)
             {
                 this.pendingRequests.Add(tempTileRequest);
@@ -75,42 +72,6 @@ namespace MappingTiles
             {
                 this.thereMayBeWorkToDo.Dispose();
             }
-        }
-
-        private void DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
-        {
-            AsyncTileRequest key = null;
-            lock (this.executingRequests)
-            {
-                KeyValuePair<AsyncTileRequest, WebClient> keyValuePair = this.executingRequests.First<KeyValuePair<AsyncTileRequest, WebClient>>((KeyValuePair<AsyncTileRequest, WebClient> item) => item.Value == sender);
-                key = keyValuePair.Key;
-                this.executingRequests.Remove(key);
-                this.thereMayBeWorkToDo.Set();
-            }
-            byte[] requestBitmap = null;
-            Exception error = e.Error;
-            if (error == null)
-            {
-                try
-                {
-                    if ((int)e.Result.Length <= 0)
-                    {
-                        error = new Exception("empty result");
-                    }
-                    else
-                    {
-                        requestBitmap = e.Result;
-                    }
-                }
-                catch (Exception exception)
-                {
-                    error = exception;
-                    requestBitmap = null;
-                }
-            }
-            key.Callback(requestBitmap, error);
-
-            ((WebClient)sender).Dispose();
         }
 
         private void DownloadThreadStart()
@@ -158,6 +119,42 @@ namespace MappingTiles
                     }
                 }
             }
+        }
+
+        private void DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            AsyncTileRequest key = null;
+            lock (this.executingRequests)
+            {
+                KeyValuePair<AsyncTileRequest, WebClient> keyValuePair = this.executingRequests.First<KeyValuePair<AsyncTileRequest, WebClient>>((KeyValuePair<AsyncTileRequest, WebClient> item) => item.Value == sender);
+                key = keyValuePair.Key;
+                this.executingRequests.Remove(key);
+                this.thereMayBeWorkToDo.Set();
+            }
+            byte[] requestBitmap = null;
+            Exception error = e.Error;
+            if (error == null)
+            {
+                try
+                {
+                    if ((int)e.Result.Length <= 0)
+                    {
+                        error = new Exception("empty result");
+                    }
+                    else
+                    {
+                        requestBitmap = e.Result;
+                    }
+                }
+                catch (Exception exception)
+                {
+                    error = exception;
+                    requestBitmap = null;
+                }
+            }
+            key.Callback(requestBitmap, error);
+
+            ((WebClient)sender).Dispose();
         }
     }
 }

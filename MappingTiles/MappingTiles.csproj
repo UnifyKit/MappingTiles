@@ -80,7 +80,7 @@
     <Compile Include="TileSchema\TileRange.cs" />
     <Compile Include="TileSchema\TileSchema.cs" />
     <Compile Include="TileSchema\TileSchemas\BingMapsTileSchema.cs" />
-    <Compile Include="TileSchema\TileSchemas\SphericalMercatorScTilehema.cs" />
+    <Compile Include="TileSchema\TileSchemas\SphericalMercatorTileSchema.cs" />
     <Compile Include="TileSchema\TileSchemas\Wgs84TileSchema.cs" />
   </ItemGroup>
   <ItemGroup>
