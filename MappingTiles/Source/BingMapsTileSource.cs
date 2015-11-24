@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 
 namespace MappingTiles
 {
@@ -38,11 +35,6 @@ namespace MappingTiles
         {
             get;
             set;
-        }
-
-        protected override byte[] GetTileCore(TileInfo tileInfo)
-        {
-            throw new NotImplementedException();
         }
 
         protected override Uri GetUriCore(TileInfo tileInfo)

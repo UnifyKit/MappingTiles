@@ -5,6 +5,7 @@ namespace MappingTiles
     internal class AsyncTileRequest
     {
         private Uri uri;
+        private TileInfo tileInfo;
         private bool isAborted;
         private NetworkPriority networkPriority;
         private AsyncTileRequestCompletedHandler callback;
@@ -13,10 +14,10 @@ namespace MappingTiles
         { }
 
         public AsyncTileRequest(Uri uri)
-            : this(uri, null)
+            : this(uri, null, null)
         { }
 
-        public AsyncTileRequest(Uri uri, AsyncTileRequestCompletedHandler callback)
+        public AsyncTileRequest(Uri uri, TileInfo tileInfo, AsyncTileRequestCompletedHandler callback)
         {
             this.uri = uri;
             this.callback = callback;
@@ -66,6 +67,19 @@ namespace MappingTiles
         {
             get;
             set;
+        }
+
+        public TileInfo TileInfo
+        {
+            get
+            {
+                return tileInfo;
+            }
+
+            set
+            {
+                tileInfo = value;
+            }
         }
 
         public void AbortIfInQueue()

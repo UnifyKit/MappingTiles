@@ -1,7 +1,7 @@
 ﻿
 namespace MappingTiles
 {
-    internal abstract class TileDownloader
+    public abstract class TileDownloader
     {
         protected TileDownloader()
         { }

@@ -34,11 +34,6 @@ namespace MappingTiles
             }
         }
 
-        protected override byte[] GetTileCore(TileInfo tileInfo)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override Uri GetUriCore(TileInfo tileInfo)
         {
             string requestUri = GetUriTemplate(MapType);

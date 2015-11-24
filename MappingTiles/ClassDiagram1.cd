@@ -1,24 +1,164 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
-  <Class Name="MappingTiles.TileInfo">
-    <Position X="0.5" Y="0.5" Width="4.5" />
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="MappingTiles.BingMapsTileSchema">
+    <Position X="9.5" Y="4.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TileSchema\TileSchemas\BingMapsTileSchema.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.SphericalMercatorTileSchema">
+    <Position X="12.25" Y="3.5" Width="5.75" />
     <Compartments>
+      <Compartment Name="Internal" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAgAAAAAAAAAIAEAAAEAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>TileSchema\TileSchemas\SphericalMercatorTileSchema.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.Wgs84TileSchema">
+    <Position X="12.75" Y="0.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAIAAAAAEAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>TileSchema\TileSchemas\Wgs84TileSchema.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.TileInfo" Collapsed="true">
+    <Position X="12.5" Y="12.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACACAAAABBAAAAQAQgRIAEAECCACAgAAAAAAAAAAAAA=</HashCode>
       <FileName>TileSchema\TileInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MappingTiles.TileSource">
-    <Position X="5.5" Y="0.5" Width="4.25" />
+  <Class Name="MappingTiles.TileMatrix">
+    <Position X="11.25" Y="11.75" Width="4.25" />
     <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAAABAAAAAAAAAAAAGAgCAAAACAAAgAAAQAAAAA=</HashCode>
+      <FileName>TileSchema\TileMatrix.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.TileRange" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="11.75" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAiAAACIAAAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>TileSchema\TileRange.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MappingTiles.TileSchema">
+    <Position X="6.75" Y="0.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAABAAAICAAAAACAAACAAAAAAA=</HashCode>
+      <FileName>TileSchema\TileSchema.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.TileDownloader">
+    <Position X="11.5" Y="6.5" Width="8.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAACAAAEAAAAAAAA=</HashCode>
+      <FileName>TileRequest\TileDownloader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.ImageTileDownloader">
+    <Position X="11.5" Y="8.75" Width="8.25" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="MappingTiles.TileDownloader" FixedToPoint="true">
+      <Path>
+        <Point X="15.625" Y="8.632" />
+        <Point X="15.625" Y="8.69" />
+        <Point X="15.92" Y="8.69" />
+        <Point X="15.92" Y="8.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAQABAgAAAAAAAAAAAAgAGAACAAgEAAAAAAAA=</HashCode>
+      <FileName>TileRequest\ImageTileDownloader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.BingMapsTileSource">
+    <Position X="0.5" Y="4" Width="4.25" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AQAAQAAAAAAAEQAAAAAAAAAEAAgAAAMAABAAAAAAAAA=</HashCode>
+      <HashCode>AAAARAAAAAACAAAAAAAAAAAAQAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Source\BingMapsTileSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.OpenStreetMapTileSource">
+    <Position X="5" Y="4" Width="4" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAACAAAAAABAAAAAQAAAAAQAAAAAIAAAAAA=</HashCode>
+      <FileName>Source\OpenStreetMapTileSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MappingTiles.TileSource">
+    <Position X="1.5" Y="0.75" Width="4.25" />
+    <Compartments>
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Internal" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAREBAAABAEQAAACAAAAAEAAgAAAMAAAAAAAAAAAA=</HashCode>
       <FileName>Source\TileSource.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="MappingTiles.FileTileCache" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="9.75" Width="4.75" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAEAAAwAAJAEAAADAAAAAAAAAAEAAQAAAEAAAA=</HashCode>
+      <FileName>Cache\FileTileCache.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MappingTiles.MemoryTileCache&lt;T&gt;" BaseTypeListCollapsed="true">
+    <Position X="5.5" Y="9.75" Width="5.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>BCIAAgACCCAACABAEAAABAAAgAQAAAIAAAAAAkBAAAA=</HashCode>
+      <FileName>Cache\MemoryTileCache.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="MappingTiles.ITileCache&lt;T&gt;">
+    <Position X="4" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cache\ITileCache.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="MappingTiles.TileFormat">
+    <Position X="9.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAEAA=</HashCode>
+      <FileName>TileSchema\TileFormat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -16,9 +16,13 @@ namespace MappingTiles
         private Thread downloadThread;
         private ManualResetEvent thereMayBeWorkToDo;
 
+        private static ITileCache<byte[]> tileCache;
+
         static AsyncTileRequestQueue()
         {
             AsyncTileRequestQueue.MaxSimultaneousRequests = 6;
+            WebProxy = null;
+            TileCache = new MemoryTileCache<byte[]>();
         }
 
         private AsyncTileRequestQueue()
@@ -45,9 +49,33 @@ namespace MappingTiles
             }
         }
 
-        public AsyncTileRequest CreateRequest(Uri uri, NetworkPriority networkPriority, AsyncTileRequestCompletedHandler callback)
+        public static IWebProxy WebProxy
         {
-            AsyncTileRequest tempTileRequest = new AsyncTileRequest(uri, callback)
+            get;
+            set;
+        }
+
+        public static ICredentials Credentials
+        {
+            get;
+            set;
+        }
+
+        public static ITileCache<byte[]> TileCache
+        {
+            get
+            {
+                return tileCache;
+            }
+            internal set
+            {
+                tileCache = value;
+            }
+        }
+
+        public AsyncTileRequest CreateRequest(Uri uri, TileInfo tileInfo, NetworkPriority networkPriority, AsyncTileRequestCompletedHandler callback)
+        {
+            AsyncTileRequest tempTileRequest = new AsyncTileRequest(uri, tileInfo, callback)
             {
                 NetworkPriority = networkPriority
             };
@@ -110,7 +138,9 @@ namespace MappingTiles
                     {
                         WebClient webClient = new WebClient()
                         {
-                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable)
+                            CachePolicy = new RequestCachePolicy(RequestCacheLevel.CacheIfAvailable),
+                            Proxy = WebProxy,
+                            Credentials = Credentials
                         };
                         webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(this.DownloadDataCompleted);
 
@@ -131,7 +161,7 @@ namespace MappingTiles
                 this.executingRequests.Remove(key);
                 this.thereMayBeWorkToDo.Set();
             }
-            byte[] requestBitmap = null;
+            byte[] requestedTileInBytes = null;
             Exception error = e.Error;
             if (error == null)
             {
@@ -143,16 +173,23 @@ namespace MappingTiles
                     }
                     else
                     {
-                        requestBitmap = e.Result;
+                        requestedTileInBytes = e.Result;
                     }
                 }
                 catch (Exception exception)
                 {
                     error = exception;
-                    requestBitmap = null;
+                    requestedTileInBytes = null;
                 }
             }
-            key.Callback(requestBitmap, error);
+
+            // Save the requested tile into cache.
+            if (requestedTileInBytes != null && key.TileInfo != null)
+            {
+                TileCache.Add(key.TileInfo, requestedTileInBytes);
+            }
+
+            key.Callback(requestedTileInBytes, error);
 
             ((WebClient)sender).Dispose();
         }

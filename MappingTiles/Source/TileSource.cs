@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Net;
 
 namespace MappingTiles
 {
     public abstract class TileSource : Source
     {
         private readonly object counterLocker = new object();
+        private readonly ITileCache<byte[]> tileCache;
+        private readonly TileDownloader tileDownloader;
 
         private int counter;
 
@@ -13,13 +16,27 @@ namespace MappingTiles
         { }
 
         protected TileSource(string id)
-            : this(new Wgs84TileSchema(), id)
+            : this(new Wgs84TileSchema())
         { }
 
-        protected TileSource(TileSchema tileSchema, string id)
+        protected TileSource(TileSchema tileSchema)
+            : this(tileSchema, null, null)
+        { }
+
+        protected TileSource(TileSchema tileSchema, TileDownloader tileDownloaer)
+            : this(tileSchema, null, tileDownloaer)
+        { }
+
+        protected TileSource(TileSchema tileSchema, ITileCache<byte[]> tileCache, TileDownloader tileDownloader)
+            : this(tileSchema, tileCache, tileDownloader, Utility.CreateUniqueId())
+        { }
+
+        protected TileSource(TileSchema tileSchema, ITileCache<byte[]> tileCache, TileDownloader tileDownloader, string id)
             : base(id)
         {
             this.Schema = tileSchema;
+            this.tileCache = tileCache ?? new MemoryTileCache<byte[]>();
+            this.tileDownloader = this.tileDownloader ?? new ImageTileDownloader(tileSchema);
         }
 
         public TileSchema Schema
@@ -40,13 +57,21 @@ namespace MappingTiles
             }
         }
 
-        // Todo: consider remove it or add a callback fun for async-request.
-        public byte[] GetTile(TileInfo tileInfo)
+        public ITileCache<byte[]> TileCache
         {
-            return GetTileCore(tileInfo);
+            get
+            {
+                return tileCache;
+            }
         }
 
-        protected abstract byte[] GetTileCore(TileInfo tileInfo);
+        public virtual void DownloadTile(TileInfo tileInfo, AsyncTileRequestCompletedHandler callback)
+        {
+            Uri tileUri = GetUri(tileInfo);
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(tileUri);
+
+            this.tileDownloader.Download(tileInfo, this, callback);
+        }
 
         public Uri GetUri(TileInfo tileInfo)
         {
