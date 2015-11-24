@@ -50,24 +50,24 @@
     <Compile Include="BaseType\Pixel.cs" />
     <Compile Include="BaseType\Point.cs" />
     <Compile Include="BaseType\ZoomLevel.cs" />
-    <Compile Include="Cache\FileTileCache.cs">
+    <Compile Include="TileCache\FileTileCache.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Cache\ITileCache.cs" />
-    <Compile Include="Cache\MemoryTileCache.cs" />
+    <Compile Include="TileCache\ITileCache.cs" />
+    <Compile Include="TileCache\MemoryTileCache.cs" />
     <Compile Include="Miscellaneous\InternalChecker.cs" />
     <Compile Include="Miscellaneous\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\BingMapsTileSource.cs">
+    <Compile Include="TileSource\BingMapsTileSource.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Source\BingMapsType.cs">
+    <Compile Include="TileSource\BingMapsType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Source\OpenStreetMapTileSource.cs" />
-    <Compile Include="Source\OpenStreetMapType.cs" />
-    <Compile Include="Source\Source.cs" />
-    <Compile Include="Source\TileSource.cs" />
+    <Compile Include="TileSource\OpenStreetMapTileSource.cs" />
+    <Compile Include="TileSource\OpenStreetMapType.cs" />
+    <Compile Include="TileSource\Source.cs" />
+    <Compile Include="TileSource\TileSource.cs" />
     <Compile Include="TileRequest\ImageTileDownloader.cs" />
     <Compile Include="TileRequest\RequestPool\AsyncTileRequest.cs" />
     <Compile Include="TileRequest\RequestPool\AsyncTileRequestCompletedHandler.cs" />
