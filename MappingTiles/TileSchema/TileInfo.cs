@@ -25,7 +25,7 @@ namespace MappingTiles
         }
 
         public TileInfo(int column, int row, double resolution)
-            : this(column, row, resolution, new Wgs84TileSchema())
+            : this(column, row, resolution, new SphericalMercatorTileSchema())
         { }
 
         public TileInfo(int column, int row, double resolution, TileSchema tileSchema)

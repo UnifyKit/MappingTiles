@@ -12,7 +12,7 @@ namespace MappingTiles
         private readonly ITileCache<byte[]> tileCache;
 
         public ImageTileDownloader()
-            : this(new Wgs84TileSchema())
+            : this(new SphericalMercatorTileSchema())
         {
         }
 

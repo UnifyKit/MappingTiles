@@ -50,6 +50,7 @@
     <Compile Include="BaseType\Pixel.cs" />
     <Compile Include="BaseType\Point.cs" />
     <Compile Include="BaseType\ZoomLevel.cs" />
+    <Compile Include="Layer\Layer.cs" />
     <Compile Include="TileCache\FileTileCache.cs">
       <SubType>Code</SubType>
     </Compile>
