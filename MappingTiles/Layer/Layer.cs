@@ -9,9 +9,10 @@ namespace MappingTiles
 
         private string id;
         private string name;
-        private bool enabled;
-        private ZoomLevel minVisibleZoomLevel;
-        private ZoomLevel maxVisibleZoomLevel;
+        private bool visible;
+        private ZoomLevel minZoomLevel;
+        private ZoomLevel maxZoomLevel;
+        private double opacity;
 
         protected Layer()
             : this(Utility.CreateUniqueId())
@@ -19,9 +20,10 @@ namespace MappingTiles
 
         protected Layer(string id)
         {
-            this.minVisibleZoomLevel = new ZoomLevel(0);
-            this.MaxVisibleZoomLevel = new ZoomLevel(); // take the max resolution
+            this.minZoomLevel = new ZoomLevel(0);
+            this.MaxZoomLevel = new ZoomLevel(); // take the max resolution
             this.id = id;
+            this.Opacity = 1;
         }
 
         public string Id
@@ -45,48 +47,73 @@ namespace MappingTiles
             }
         }
 
-        public bool Enabled
+        public bool Visible
         {
             get
             {
-                return enabled;
+                return visible;
             }
 
             set
             {
-                enabled = value;
+                visible = value;
             }
         }
 
-        public ZoomLevel MinVisibleZoomLevel
+        /// <summary>
+        /// Gets or sets the minimum zoom level (inclusive) at which this layer will be visible.
+        /// </summary>
+        public ZoomLevel MinZoomLevel
         {
             get
             {
-                return minVisibleZoomLevel;
+                return minZoomLevel;
             }
 
             set
             {
-                minVisibleZoomLevel = value;
+                minZoomLevel = value;
             }
         }
 
-        public ZoomLevel MaxVisibleZoomLevel
+        /// <summary>
+        /// Gets or sets the maximum  zoom level (inclusive) at which this layer will be visible.
+        /// </summary>
+        public ZoomLevel MaxZoomLevel
         {
             get
             {
-                return maxVisibleZoomLevel;
+                return maxZoomLevel;
             }
 
             set
             {
-                maxVisibleZoomLevel = value;
+                maxZoomLevel = value;
             }
         }
 
+        public double Opacity
+        {
+            get
+            {
+                return opacity;
+            }
+
+            set
+            {
+                opacity = value;
+            }
+        }
+
+        /// <summary>
+        /// Calculates the boundingbox for layer rendering. The layer will not be rendered outside of this extent.
+        /// </summary>
+        /// <returns>Return the extent of the layer or default value "new BoundingBox(0, 0, 0, 0)" if it will be visible regardless of extent.</returns>
         public virtual BoundingBox GetBoundingBox()
         {
-            throw new NotImplementedException();
+            return new BoundingBox(0, 0, 0, 0);
         }
+
+        public abstract void ClearCache();
     }
 }

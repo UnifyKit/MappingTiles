@@ -22,5 +22,10 @@ namespace MappingTiles
         /// <param name="index">The id of the tile to find</param>
         /// <returns>The tile data that corresponds with the id or null.</returns>
         T Get(TileInfo tileInfo);
+
+        /// <summary>
+        /// Clears all the data cached.
+        /// </summary>
+        void Clear();
     }
 }

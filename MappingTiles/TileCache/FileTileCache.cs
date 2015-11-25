@@ -113,6 +113,21 @@ namespace MappingTiles
             return false;
         }
 
+        public void Clear()
+        {
+            try
+            {
+                readerWriterLocker.EnterWriteLock();
+                if (!Directory.Exists(directory))
+                {
+                    Directory.Delete(directory);
+                }
+            }
+            finally
+            {
+                readerWriterLocker.ExitWriteLock();
+            }
+        }
 
         public string GetCachedTileFilePathName(TileInfo tileInfo)
         {
