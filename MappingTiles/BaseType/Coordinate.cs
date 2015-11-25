@@ -184,5 +184,42 @@ namespace MappingTiles
         {
             return CompareTo(other) == 1;
         }
+
+        /// <summary>
+        /// Calculates a new point by rotating this point clockwise about the specified center point
+        /// </summary>
+        /// <param name="degrees">Angle to rotate clockwise (degrees)</param>
+        /// <param name="centerX">X coordinate of point about which to rotate</param>
+        /// <param name="centerY">Y coordinate of point about which to rotate</param>
+        /// <returns>Returns the rotated point</returns>
+        public Coordinate Rotate(double degrees, double centerX, double centerY)
+        {
+            // translate this point back to the center
+            double newX = x - centerX;
+            double newY = y - centerY;
+
+            double radians = Utility.ConvertDegreesToRadians(degrees);
+            double cos = Math.Cos(-radians);
+            double sin = Math.Sin(-radians);
+            double rotatedX = x * cos - y * sin;
+            double rotatedY = x * sin + y * cos;
+
+            // translate back to original reference frame
+            newX = rotatedX + centerX;
+            newY = rotatedY + centerY;
+
+            return new Coordinate(newX, newY);
+        }
+
+        /// <summary>
+        /// Calculates a new point by rotating this point clockwise about the specified center point
+        /// </summary>
+        /// <param name="degrees">Angle to rotate clockwise (degrees)</param>
+        /// <param name="center">Point about which to rotate</param>
+        /// <returns>Returns the rotated point</returns>
+        public Coordinate Rotate(double degrees, Coordinate center)
+        {
+            return Rotate(degrees, center.X, center.Y);
+        }
     }
 }

@@ -22,5 +22,10 @@ namespace MappingTiles
         {
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 22).Replace("/", "").Replace("+", "").Replace("-", "");
         }
+
+        public static double ConvertDegreesToRadians(double degrees)
+        {
+            return degrees * Math.PI / 180.0;
+        }
     }
 }
