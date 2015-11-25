@@ -74,7 +74,7 @@ namespace MappingTiles
             AsyncTileRequest tileRequest;
             if (!this.tileRequests.TryGetValue(tileSource, out tileRequest))
             {
-                throw new InvalidOperationException(ApplicationMessages.TileInProgressCancel);
+                throw new InvalidOperationException(Messages.TileInProgressCancel);
             }
             tileRequest.IsAborted = true;
             tileRequest.AbortIfInQueue();

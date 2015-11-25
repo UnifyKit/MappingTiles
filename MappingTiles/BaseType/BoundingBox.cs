@@ -14,7 +14,7 @@ namespace MappingTiles
         {
             if (minX > maxX || minY > maxY)
             {
-                throw new ArgumentException(ApplicationMessages.BoundingBoxValuesInvalid);
+                throw new ArgumentException(Messages.BoundingBoxValuesInvalid);
             }
 
             this.MinX = minX;

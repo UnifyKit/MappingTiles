@@ -95,7 +95,7 @@ namespace MappingTiles
                 }
                 else
                 {
-                    throw new IndexOutOfRangeException(ApplicationMessages.ValueOutOfRange);
+                    throw new IndexOutOfRangeException(Messages.ValueOutOfRange);
                 }
             }
             set
@@ -110,7 +110,7 @@ namespace MappingTiles
                 }
                 else
                 {
-                    throw new IndexOutOfRangeException(ApplicationMessages.ValueOutOfRange);
+                    throw new IndexOutOfRangeException(Messages.ValueOutOfRange);
                 }
                 isEmpty = false;
             }

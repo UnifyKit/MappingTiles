@@ -10,7 +10,7 @@ namespace MappingTiles
         {
             if (objects == null || objects.Count() == 0)
             {
-                throw new ArgumentNullException(argument,ApplicationMessages.CollectionNullOrEmpty);
+                throw new ArgumentNullException(argument, Messages.CollectionNullOrEmpty);
             }
         }
 
