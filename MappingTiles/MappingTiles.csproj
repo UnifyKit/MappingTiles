@@ -48,7 +48,7 @@
     <Compile Include="BaseType\BoundingBox.cs" />
     <Compile Include="BaseType\IConable.cs" />
     <Compile Include="BaseType\Pixel.cs" />
-    <Compile Include="BaseType\Point.cs" />
+    <Compile Include="BaseType\Coordinate.cs" />
     <Compile Include="BaseType\ZoomLevel.cs" />
     <Compile Include="Layer\Layer.cs" />
     <Compile Include="Layer\TileLayer.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="TileSchema\TileSchemas\BingMapsTileSchema.cs" />
     <Compile Include="TileSchema\TileSchemas\SphericalMercatorTileSchema.cs" />
     <Compile Include="TileSchema\TileSchemas\Wgs84TileSchema.cs" />
+    <Compile Include="View.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Messages.resx">

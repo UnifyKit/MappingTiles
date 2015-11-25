@@ -7,7 +7,7 @@ namespace MappingTiles
     /// This class represents a screen coordinate, in x and y coordinates
     /// </summary>
     [DataContract]
-    public class Pixel : IConable, IEquatable<Point>
+    public class Pixel : IConable, IEquatable<Coordinate>
     {
         /// <summary>
         /// Initializes a new instance of the Pixel object.
@@ -59,7 +59,7 @@ namespace MappingTiles
             return Math.Sqrt(Math.Pow(this.X - other.X, 2) + Math.Pow(this.Y - other.Y, 2));
         }
 
-        public bool Equals(Point other)
+        public bool Equals(Coordinate other)
         {
             bool equals = false;
             if (other != null)

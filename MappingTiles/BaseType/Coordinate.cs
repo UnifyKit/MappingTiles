@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace MappingTiles
 {
     [DataContract]
-    public class Point : IComparable<Point>, IConable, IEquatable<Point>
+    public class Coordinate : IComparable<Coordinate>, IConable, IEquatable<Coordinate>
     {
         private bool isEmpty;
         private double x;
@@ -13,7 +13,7 @@ namespace MappingTiles
         /// <summary>
         /// Creates a new empty Point.
         /// </summary>
-        public Point()
+        public Coordinate()
             : this(0, 0)
         {
             isEmpty = true;
@@ -24,7 +24,7 @@ namespace MappingTiles
         /// </summary>
         /// <param name="x">X (longitude) coordinate</param>
         /// <param name="y">Y (latitude) coordinate</param>
-        public Point(double x, double y)
+        public Coordinate(double x, double y)
         {
             this.x = x;
             this.y = y;
@@ -122,9 +122,9 @@ namespace MappingTiles
         /// <param name="point1">Vector</param>
         /// <param name="point2">Vector</param>
         /// <returns></returns>
-        public static Point operator +(Point point1, Point point2)
+        public static Coordinate operator +(Coordinate point1, Coordinate point2)
         {
-            return new Point(point1.X + point2.X, point1.Y + point2.Y);
+            return new Coordinate(point1.X + point2.X, point1.Y + point2.Y);
         }
 
         /// <summary>
@@ -133,9 +133,9 @@ namespace MappingTiles
         /// <param name="point1">Vector</param>
         /// <param name="point2">Vector</param>
         /// <returns>Cross product</returns>
-        public static Point operator -(Point point1, Point point2)
+        public static Coordinate operator -(Coordinate point1, Coordinate point2)
         {
-            return new Point(point1.X - point2.X, point1.Y - point2.Y);
+            return new Coordinate(point1.X - point2.X, point1.Y - point2.Y);
         }
 
         /// <summary>
@@ -144,12 +144,12 @@ namespace MappingTiles
         /// <param name="point">Vector</param>
         /// <param name="scaling">Scalar (double)</param>
         /// <returns></returns>
-        public static Point operator *(Point point, double scaling)
+        public static Coordinate operator *(Coordinate point, double scaling)
         {
-            return new Point(point.X * scaling, point.Y * scaling);
+            return new Coordinate(point.X * scaling, point.Y * scaling);
         }
 
-        public int CompareTo(Point other)
+        public int CompareTo(Coordinate other)
         {
             if (X < other.X || X == other.X && Y < other.Y)
             {
@@ -168,7 +168,7 @@ namespace MappingTiles
 
         public object Clone()
         {
-            return new Point(X, Y);
+            return new Coordinate(X, Y);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace MappingTiles
             return x.GetHashCode() ^ y.GetHashCode() ^ isEmpty.GetHashCode();
         }
 
-        public bool Equals(Point other)
+        public bool Equals(Coordinate other)
         {
             return CompareTo(other) == 1;
         }

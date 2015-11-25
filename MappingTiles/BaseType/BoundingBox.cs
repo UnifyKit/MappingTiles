@@ -5,7 +5,7 @@ namespace MappingTiles
 {
     public struct BoundingBox : IEquatable<BoundingBox>
     {
-        public BoundingBox(Point lowerLeft, Point upperRight)
+        public BoundingBox(Coordinate lowerLeft, Coordinate upperRight)
             : this(lowerLeft.X, lowerLeft.Y, upperRight.X, upperRight.Y)
         { }
 
@@ -47,19 +47,19 @@ namespace MappingTiles
             private set;
         }
 
-        public Point LowerLeft
+        public Coordinate LowerLeft
         {
             get
             {
-                return new Point(MinX, MinY);
+                return new Coordinate(MinX, MinY);
             }
         }
 
-        public Point UpperRight
+        public Coordinate UpperRight
         {
             get
             {
-                return new Point(MaxX, MaxY);
+                return new Coordinate(MaxX, MaxY);
             }
         }
 
