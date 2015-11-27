@@ -115,5 +115,7 @@ namespace MappingTiles
         }
 
         public abstract void ClearCache();
+
+        public abstract void ViewChanged(UpdateMode updateMode, View view);
     }
 }

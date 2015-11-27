@@ -29,5 +29,13 @@ namespace MappingTiles
                 TileSource.TileCache.Clear();
             }
         }
+
+        public override void ViewChanged(UpdateMode updateMode, View view)
+        {
+            if (Visible && view.BoundingBox.Area > 0 && _tileFetcher != null && MaxZoomLevel.Resolution > view.ZoomLevel.Resolution && MinZoomLevel.Resolution < view.ZoomLevel.Resolution)
+            {
+                _tileFetcher.ViewChanged(extent, resolution);
+            }
+        }
     }
 }
