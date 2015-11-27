@@ -15,6 +15,7 @@ namespace MappingTiles
         protected TileLayer(TileSource tileSource, string id)
             : base(id)
         {
+            this.tileSource = tileSource;
         }
 
         public TileSource TileSource
