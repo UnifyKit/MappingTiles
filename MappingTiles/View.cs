@@ -67,25 +67,35 @@ namespace MappingTiles
 
         public Coordinate ToWorldCoordinate(Pixel pixel)
         {
+            return ToWorldCoordinate(pixel.X, pixel.Y);
+        }
+
+        public Coordinate ToWorldCoordinate(double x, double y)
+        {
             double screenCenterX = Width / 2.0;
             double screenCenterY = Height / 2.0;
 
             if (RotationEnabled)
             {
-                Coordinate screen = new Coordinate(pixel.X, pixel.Y).Rotate(Rotation, screenCenterX, screenCenterY);
-                pixel.X = (float)screen.X;
-                pixel.Y = (float)screen.Y;
+                Coordinate screen = new Coordinate(x, y).Rotate(Rotation, screenCenterX, screenCenterY);
+                x = (float)screen.X;
+                y = (float)screen.Y;
             }
 
-            double worldX = Center.X + (pixel.X - screenCenterX) * ZoomLevel.Resolution;
-            double worldY = Center.Y - ((pixel.Y - screenCenterY) * ZoomLevel.Resolution);
+            double worldX = Center.X + (x - screenCenterX) * ZoomLevel.Resolution;
+            double worldY = Center.Y - ((y - screenCenterY) * ZoomLevel.Resolution);
 
             return new Coordinate(worldX, worldY);
         }
 
         public Pixel ToScreenPixel(Coordinate coordinate)
         {
-            Pixel pixel = ToScreenPixelUnrotated(coordinate.X, coordinate.Y);
+            return ToScreenPixel(coordinate.X, coordinate.Y);
+        }
+
+        public Pixel ToScreenPixel(double x, double y)
+        {
+            Pixel pixel = ToScreenPixelUnrotated(x, y);
             if (RotationEnabled)
             {
                 double screenCenterX = Width * 0.5;
