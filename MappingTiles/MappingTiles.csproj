@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Layer\UpdateMode.cs" />
-    <Compile Include="MapCore.cs" />
+    <Compile Include="Map\MapCore.cs" />
     <Compile Include="Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -54,6 +54,7 @@
     <Compile Include="BaseType\ZoomLevel.cs" />
     <Compile Include="Layer\Layer.cs" />
     <Compile Include="Layer\TileLayer.cs" />
+    <Compile Include="Map\Render.cs" />
     <Compile Include="TileCache\FileTileCache.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -86,7 +87,7 @@
     <Compile Include="TileSchema\TileSchemas\BingMapsTileSchema.cs" />
     <Compile Include="TileSchema\TileSchemas\SphericalMercatorTileSchema.cs" />
     <Compile Include="TileSchema\TileSchemas\Wgs84TileSchema.cs" />
-    <Compile Include="View.cs" />
+    <Compile Include="Map\View.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Messages.resx">
