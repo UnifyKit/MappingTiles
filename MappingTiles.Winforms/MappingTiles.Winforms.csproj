@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundLayer.cs" />
+    <Compile Include="GdiPlusRender.cs" />
     <Compile Include="Map.cs">
       <SubType>Component</SubType>
     </Compile>

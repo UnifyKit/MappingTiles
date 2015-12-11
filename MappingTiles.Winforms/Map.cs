@@ -12,7 +12,7 @@ namespace MappingTiles.Winforms
 {
     public class Map : Control, IDisposable
     {
-        private Bitmap mapBuffer;
+        //private Bitmap mapBuffer;
 
         private View viewport;
         private string crs;
@@ -114,6 +114,30 @@ namespace MappingTiles.Winforms
             {
                 layer.ViewChanged(updateMode, Viewport);
             }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            e.Graphics.Clear(BackColor);
+
+            base.OnPaint(e);
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs pevent)
+        {
+            base.OnPaintBackground(pevent);
+        }
+
+        protected void InitializeView()
+        {
+            if (double.IsNaN(Width) || Width == 0) return;
+            //if (_map == null || _map.Envelope == null || double.IsNaN(_map.Envelope.Width) || _map.Envelope.Width <= 0) return;
+            //if (_map.Envelope.GetCentroid() == null) return;
+
+            //Map.Viewport.Center = _map.Envelope.GetCentroid();
+            //Map.Viewport.Resolution = _map.Envelope.Width / Width;
+            //_viewInitialized = true;
+            //ViewChanged(true);
         }
 
         #region IDisposable Support
