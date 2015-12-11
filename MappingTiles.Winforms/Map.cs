@@ -120,6 +120,8 @@ namespace MappingTiles.Winforms
         {
             e.Graphics.Clear(BackColor);
 
+
+
             base.OnPaint(e);
         }
 
