@@ -88,14 +88,15 @@ namespace MappingTiles
 
         public void ViewChanged(UpdateMode updateMode)
         {
+            DrawingParameters drawingParams = new DrawingParameters()
+            {
+                View = this.Viewport,
+                Render = this.Render
+            };
+
             foreach (var layer in layers.ToList())
             {
-                layer.ViewChanged(updateMode, Viewport, (parameter) =>
-                {
-
-
-                    throw new NotImplementedException();
-                });
+                layer.ViewChanged(updateMode, drawingParams);
             }
         }
 

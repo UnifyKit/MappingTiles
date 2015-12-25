@@ -41,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Layer\DrawingParameters.cs" />
+    <Compile Include="Layer\RasterLayer.cs" />
     <Compile Include="Layer\UpdateMode.cs" />
+    <Compile Include="Layer\VectorLayer.cs" />
     <Compile Include="Map\MapCore.cs" />
     <Compile Include="Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -70,8 +72,10 @@
     <Compile Include="TileSource\BingMapsType.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TileSource\VectorSource.cs" />
     <Compile Include="TileSource\OpenStreetMapTileSource.cs" />
     <Compile Include="TileSource\OpenStreetMapType.cs" />
+    <Compile Include="TileSource\RasterSource.cs" />
     <Compile Include="TileSource\Source.cs" />
     <Compile Include="TileSource\TileSource.cs" />
     <Compile Include="TileRequest\ImageTileDownloader.cs" />

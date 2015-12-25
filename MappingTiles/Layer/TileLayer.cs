@@ -54,7 +54,10 @@ namespace MappingTiles
                 Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(parameters.View.BoundingBox);
                 foreach (TileInfo tileInfo in tilesInBbox)
                 {
-                    this.TileSource.DownloadTile(tileInfo, new AsyncTileRequestCompletedHandler(DrawTile));
+                    this.TileSource.DownloadTile(tileInfo, new AsyncTileRequestCompletedHandler((tileInBytes, error) =>
+                    {
+                        //parameters.Render.Draw()
+                    }));
                 }
             }
         }
@@ -64,11 +67,6 @@ namespace MappingTiles
             TileDownloader tileDownloader = new ImageTileDownloader(tileSchema);
 
             return tileDownloader;
-        }
-
-        private void DrawTile(byte[] tilesInBytes, Exception error)
-        { 
-            
         }
     }
 }
