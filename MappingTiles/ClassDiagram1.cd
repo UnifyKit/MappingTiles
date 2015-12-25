@@ -62,24 +62,24 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.TileDownloader">
-    <Position X="11.5" Y="6.5" Width="8.25" />
+    <Position X="11.5" Y="6.25" Width="8.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAACAAAEAAAAAAAA=</HashCode>
       <FileName>TileRequest\TileDownloader.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.ImageTileDownloader">
-    <Position X="11.5" Y="8.75" Width="8.25" />
+    <Position X="11.25" Y="8.5" Width="8.25" />
     <Compartments>
       <Compartment Name="Private" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <InheritanceLine Type="MappingTiles.TileDownloader" FixedToPoint="true">
       <Path>
-        <Point X="15.625" Y="8.632" />
-        <Point X="15.625" Y="8.69" />
-        <Point X="15.92" Y="8.69" />
-        <Point X="15.92" Y="8.75" />
+        <Point X="15.625" Y="8.382" />
+        <Point X="15.625" Y="8.44" />
+        <Point X="15.67" Y="8.44" />
+        <Point X="15.67" Y="8.5" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -95,7 +95,7 @@
     </Compartments>
     <TypeIdentifier>
       <HashCode>AAAARAAAAAACAAAAAAAAAAAAQAIAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Source\BingMapsTileSource.cs</FileName>
+      <FileName>TileSource\BingMapsTileSource.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.OpenStreetMapTileSource">
@@ -106,7 +106,7 @@
     </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAQAAAAAACAAAAAABAAAAAQAAAAAQAAAAAIAAAAAA=</HashCode>
-      <FileName>Source\OpenStreetMapTileSource.cs</FileName>
+      <FileName>TileSource\OpenStreetMapTileSource.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.TileSource">
@@ -118,8 +118,8 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAREBAAABAEQAAACAAAAAEAAgAAAMAAAAAAAAAAAA=</HashCode>
-      <FileName>Source\TileSource.cs</FileName>
+      <HashCode>AAAAQEBAAABAEQAAACAAAAAEAAgAAAMAAAAAAAAAAAA=</HashCode>
+      <FileName>TileSource\TileSource.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.FileTileCache" BaseTypeListCollapsed="true">
@@ -129,8 +129,8 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAIAAAAEAAAwAAJAEAAADAAAAAAAAAAEAAQAAAEAAAA=</HashCode>
-      <FileName>Cache\FileTileCache.cs</FileName>
+      <HashCode>AAIAAAAEAAAwAAJAEAAADAAAAAAAAAAEAAQAAAFAAAA=</HashCode>
+      <FileName>TileCache\FileTileCache.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
@@ -142,15 +142,15 @@
     </Compartments>
     <TypeIdentifier>
       <HashCode>BCIAAgACCCAACABAEAAABAAAgAQAAAIAAAAAAkBAAAA=</HashCode>
-      <FileName>Cache\MemoryTileCache.cs</FileName>
+      <FileName>TileCache\MemoryTileCache.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Interface Name="MappingTiles.ITileCache&lt;T&gt;">
-    <Position X="4" Y="8" Width="2.5" />
+    <Position X="4" Y="7.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Cache\ITileCache.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>TileCache\ITileCache.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="MappingTiles.TileFormat">

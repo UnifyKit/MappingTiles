@@ -21,8 +21,12 @@ namespace MappingTiles.Winforms
         private Coordinate center;
         private ObservableCollection<Layer> layers;
 
+        private bool viewInitialized;
+
         public Map()
         {
+            viewInitialized = false;
+
             layers = new ObservableCollection<Layer>();
             layers.CollectionChanged += Layers_CollectionChanged;
         }
@@ -59,42 +63,6 @@ namespace MappingTiles.Winforms
             }
         }
 
-        public BoundingBox Boundingbox
-        {
-            get
-            {
-                return boundingbox;
-            }
-            set
-            {
-                boundingbox = value;
-            }
-        }
-
-        public ZoomLevel ZoomLevel
-        {
-            get
-            {
-                return zoomLevel;
-            }
-            set
-            {
-                zoomLevel = value;
-            }
-        }
-
-        public Coordinate Center
-        {
-            get
-            {
-                return center;
-            }
-            set
-            {
-                center = value;
-            }
-        }
-
         private void Layers_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             throw new NotImplementedException();
@@ -112,15 +80,18 @@ namespace MappingTiles.Winforms
         {
             foreach (var layer in layers.ToList())
             {
-                layer.ViewChanged(updateMode, Viewport);
+                layer.ViewChanged(updateMode, Viewport, null);
             }
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (!viewInitialized)
+            {
+                InitializeView();
+            }
+
             e.Graphics.Clear(BackColor);
-
-
 
             base.OnPaint(e);
         }
@@ -133,13 +104,10 @@ namespace MappingTiles.Winforms
         protected void InitializeView()
         {
             if (double.IsNaN(Width) || Width == 0) return;
-            //if (_map == null || _map.Envelope == null || double.IsNaN(_map.Envelope.Width) || _map.Envelope.Width <= 0) return;
-            //if (_map.Envelope.GetCentroid() == null) return;
+            if (viewport == null || viewport.BoundingBox == null) return;
+            if (viewport.Center == null) return;
 
-            //Map.Viewport.Center = _map.Envelope.GetCentroid();
-            //Map.Viewport.Resolution = _map.Envelope.Width / Width;
-            //_viewInitialized = true;
-            //ViewChanged(true);
+            ViewChanged(UpdateMode.All);
         }
 
         #region IDisposable Support

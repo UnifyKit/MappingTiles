@@ -9,7 +9,6 @@ namespace MappingTiles
     public class TileLayer : Layer
     {
         private TileSource tileSource;
-
         private TileMatrix tileMatrix;
 
         protected TileLayer(TileSource tileSource, string id)
@@ -26,6 +25,14 @@ namespace MappingTiles
             }
         }
 
+        protected void SetTileSource(TileSource tileSource)
+        {
+            if (tileSource != null)
+            { 
+                
+            }
+        }
+
         public override void ClearCache()
         {
             if (TileSource != null)
@@ -34,7 +41,7 @@ namespace MappingTiles
             }
         }
 
-        public override void ViewChanged(UpdateMode updateMode, View view)
+        public override void ViewChanged(UpdateMode updateMode, View view, Func<DrawingParameters, bool> drawArgs)
         {
             if (Visible && view.BoundingBox.Area > 0 && tileSource != null && MaxZoomLevel.Resolution > view.ZoomLevel.Resolution && MinZoomLevel.Resolution < view.ZoomLevel.Resolution)
             {
@@ -42,7 +49,7 @@ namespace MappingTiles
                 Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(view.BoundingBox);
                 foreach (TileInfo tile in tilesInBbox)
                 {
-                    tileSource.DownloadTile(tile, null); // Todo: we need to change the null value.
+                    //tileSource.DownloadTile(tile, drawArgs); // Todo: we need to change the null value.
                 }
             }
         }
