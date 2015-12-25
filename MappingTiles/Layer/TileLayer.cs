@@ -8,28 +8,28 @@ namespace MappingTiles
 {
     public class TileLayer : Layer
     {
-        private TileSource tileSource;
+        private TileSource innerTileSource;
         private TileMatrix tileMatrix;
 
         protected TileLayer(TileSource tileSource, string id)
             : base(id)
         {
-            this.tileSource = tileSource;
+            SetTileSource(tileSource);
         }
 
         public TileSource TileSource
         {
             get
             {
-                return tileSource;
+                return innerTileSource;
             }
         }
 
         protected void SetTileSource(TileSource tileSource)
         {
             if (tileSource != null)
-            { 
-                
+            {
+                this.innerTileSource = tileSource;
             }
         }
 
@@ -41,17 +41,34 @@ namespace MappingTiles
             }
         }
 
-        public override void ViewChanged(UpdateMode updateMode, View view, Func<DrawingParameters, bool> drawArgs)
+        public override void ViewChanged(UpdateMode updateMode, DrawingParameters parameters)
         {
-            if (Visible && view.BoundingBox.Area > 0 && tileSource != null && MaxZoomLevel.Resolution > view.ZoomLevel.Resolution && MinZoomLevel.Resolution < view.ZoomLevel.Resolution)
+            if (TileSource == null)
             {
-                tileMatrix = new TileMatrix(view.ZoomLevel.Resolution, tileSource.Schema);
-                Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(view.BoundingBox);
-                foreach (TileInfo tile in tilesInBbox)
+                return;
+            }
+
+            if (Visible && parameters.View.BoundingBox.Area > 0 && innerTileSource != null && MaxZoomLevel.Resolution > parameters.View.ZoomLevel.Resolution && MinZoomLevel.Resolution < parameters.View.ZoomLevel.Resolution)
+            {
+                tileMatrix = new TileMatrix(parameters.View.ZoomLevel.Resolution, innerTileSource.Schema);
+                Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(parameters.View.BoundingBox);
+                foreach (TileInfo tileInfo in tilesInBbox)
                 {
-                    //tileSource.DownloadTile(tile, drawArgs); // Todo: we need to change the null value.
+                    this.TileSource.DownloadTile(tileInfo, new AsyncTileRequestCompletedHandler(DrawTile));
                 }
             }
+        }
+
+        protected virtual TileDownloader CreateTileDownloader(TileSchema tileSchema)
+        {
+            TileDownloader tileDownloader = new ImageTileDownloader(tileSchema);
+
+            return tileDownloader;
+        }
+
+        private void DrawTile(byte[] tilesInBytes, Exception error)
+        { 
+            
         }
     }
 }

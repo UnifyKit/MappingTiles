@@ -9,6 +9,7 @@ namespace MappingTiles
     public class DrawingParameters
     {
         private View view;
+        private Render render;
         private Collection<Layer> layers;
 
         public DrawingParameters()
@@ -19,6 +20,12 @@ namespace MappingTiles
         {
             get { return view; }
             set { view = value; }
+        }
+
+        public Render Render
+        {
+            get { return render; }
+            set { render = value; }
         }
 
         public Collection<Layer> Layers

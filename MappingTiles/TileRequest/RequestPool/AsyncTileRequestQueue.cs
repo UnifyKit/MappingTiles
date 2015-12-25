@@ -184,7 +184,7 @@ namespace MappingTiles
             }
 
             // Save the requested tile into cache.
-            if (requestedTileInBytes != null && key.TileInfo != null)
+            if (requestedTileInBytes != null && key.TileInfo != null && TileCache != null)
             {
                 TileCache.Add(key.TileInfo, requestedTileInBytes);
             }

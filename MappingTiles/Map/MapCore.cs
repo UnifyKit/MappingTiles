@@ -92,6 +92,8 @@ namespace MappingTiles
             {
                 layer.ViewChanged(updateMode, Viewport, (parameter) =>
                 {
+
+
                     throw new NotImplementedException();
                 });
             }
