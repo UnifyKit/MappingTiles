@@ -116,6 +116,6 @@ namespace MappingTiles
 
         public abstract void ClearCache();
 
-        public abstract void ViewChanged(UpdateMode updateMode, View view, Func<DrawingParameters, bool> drawArgs);
+        public abstract void ViewChanged(UpdateMode updateMode, View view, Func<DrawingParameters, bool> func);
     }
 }

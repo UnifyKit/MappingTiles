@@ -27,8 +27,9 @@ namespace MappingTiles
         {
         }
 
-        public override void ViewChanged(UpdateMode updateMode, View view)
+        public override void ViewChanged(UpdateMode updateMode, View view, Func<DrawingParameters, bool> func)
         {
+            throw new NotImplementedException();
         }
     }
 }

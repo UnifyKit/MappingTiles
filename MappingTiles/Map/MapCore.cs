@@ -11,15 +11,20 @@ namespace MappingTiles
     public class MapCore : IDisposable
     {
         private View viewport;
+        private Render render;
+
         private string crs;
         private BoundingBox boundingbox;
         private ZoomLevel zoomLevel;
         private Coordinate center;
+        private bool viewInitialized;
 
         private ObservableCollection<Layer> layers;
 
         public MapCore()
         {
+            viewInitialized = false;
+
             layers = new ObservableCollection<Layer>();
             layers.CollectionChanged += Layers_CollectionChanged;
         }
@@ -44,6 +49,18 @@ namespace MappingTiles
             }
         }
 
+        public Render Render
+        {
+            get
+            {
+                return render;
+            }
+            set
+            {
+                render = value;
+            }
+        }
+
         public string Crs
         {
             get
@@ -53,42 +70,6 @@ namespace MappingTiles
             set
             {
                 crs = value;
-            }
-        }
-
-        public BoundingBox Boundingbox
-        {
-            get
-            {
-                return boundingbox;
-            }
-            set
-            {
-                boundingbox = value;
-            }
-        }
-
-        public ZoomLevel ZoomLevel
-        {
-            get
-            {
-                return zoomLevel;
-            }
-            set
-            {
-                zoomLevel = value;
-            }
-        }
-
-        public Coordinate Center
-        {
-            get
-            {
-                return center;
-            }
-            set
-            {
-                center = value;
             }
         }
 
@@ -109,7 +90,10 @@ namespace MappingTiles
         {
             foreach (var layer in layers.ToList())
             {
-                layer.ViewChanged(updateMode, Viewport);
+                layer.ViewChanged(updateMode, Viewport, (parameter) =>
+                {
+                    throw new NotImplementedException();
+                });
             }
         }
 

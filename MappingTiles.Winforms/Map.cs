@@ -14,28 +14,20 @@ namespace MappingTiles.Winforms
     {
         //private Bitmap mapBuffer;
 
-        private View viewport;
-        private string crs;
-        private BoundingBox boundingbox;
-        private ZoomLevel zoomLevel;
-        private Coordinate center;
-        private ObservableCollection<Layer> layers;
-
+        private MapCore mapCore;
         private bool viewInitialized;
 
         public Map()
         {
-            viewInitialized = false;
-
-            layers = new ObservableCollection<Layer>();
-            layers.CollectionChanged += Layers_CollectionChanged;
+            this.viewInitialized = false;
+            this.mapCore = GetMapCore();
         }
 
         public ObservableCollection<Layer> Layers
         {
             get
             {
-                return layers;
+                return mapCore.Layers;
             }
         }
 
@@ -43,11 +35,11 @@ namespace MappingTiles.Winforms
         {
             get
             {
-                return viewport;
+                return mapCore.Viewport;
             }
             set
             {
-                viewport = value;
+                mapCore.Viewport = value;
             }
         }
 
@@ -55,33 +47,22 @@ namespace MappingTiles.Winforms
         {
             get
             {
-                return crs;
+                return mapCore.Crs;
             }
             set
             {
-                crs = value;
+                mapCore.Crs = value;
             }
-        }
-
-        private void Layers_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         public void ClearCache()
         {
-            foreach (Layer layer in layers)
-            {
-                layer.ClearCache();
-            }
+            this.mapCore.ClearCache();
         }
 
         protected void ViewChanged(UpdateMode updateMode)
         {
-            foreach (var layer in layers.ToList())
-            {
-                layer.ViewChanged(updateMode, Viewport, null);
-            }
+            this.mapCore.ViewChanged(updateMode);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -104,10 +85,18 @@ namespace MappingTiles.Winforms
         protected void InitializeView()
         {
             if (double.IsNaN(Width) || Width == 0) return;
-            if (viewport == null || viewport.BoundingBox == null) return;
-            if (viewport.Center == null) return;
+            if (Viewport == null || Viewport.BoundingBox == null) return;
+            if (Viewport.Center == null) return;
 
+            viewInitialized = true;
             ViewChanged(UpdateMode.All);
+        }
+
+        protected virtual MapCore GetMapCore()
+        {
+            MapCore map = new MapCore();
+
+            return map;
         }
 
         #region IDisposable Support
