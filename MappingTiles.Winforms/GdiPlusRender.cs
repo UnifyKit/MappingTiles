@@ -7,7 +7,7 @@ namespace MappingTiles
 {
     public class GdiPlusRender : Render
     {
-        public override void Draw(IEnumerable<Layer> layers, View view)
+        public override void Draw(RenderContext renderContext)
         {
             throw new NotImplementedException();
         }
