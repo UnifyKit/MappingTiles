@@ -6,6 +6,7 @@ namespace MappingTiles
         private View view;
         private Render render;
         private object renderObject;
+        private Pixel renderPosition;
 
         public RenderContext()
         {
@@ -27,6 +28,12 @@ namespace MappingTiles
         {
             get { return renderObject; }
             set { renderObject = value; }
+        }
+
+        public Pixel RenderPosition
+        {
+            get { return renderPosition; }
+            set { renderPosition = value; }
         }
     }
 }

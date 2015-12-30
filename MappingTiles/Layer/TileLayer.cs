@@ -53,6 +53,8 @@ namespace MappingTiles
                     this.TileSource.DownloadTile(tileInfo, new AsyncTileRequestCompletedHandler((tileInBytes, error) =>
                     {
                         renderContext.RenderObject = tileInBytes;
+                        renderContext.RenderPosition = tileInfo.GetDrawingPosition((int)renderContext.View.Width, (int)renderContext.View.Height);
+
                         renderContext.Render.Draw(renderContext);
                     }));
                 }
