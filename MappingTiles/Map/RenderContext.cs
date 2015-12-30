@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace MappingTiles
 {
     public class RenderContext
     {
         private View view;
         private Render render;
+        private object renderObject;
 
         public RenderContext()
         {
@@ -24,6 +21,12 @@ namespace MappingTiles
         {
             get { return render; }
             set { render = value; }
+        }
+
+        public object RenderObject
+        {
+            get { return renderObject; }
+            set { renderObject = value; }
         }
     }
 }

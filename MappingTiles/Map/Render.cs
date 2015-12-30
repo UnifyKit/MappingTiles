@@ -28,11 +28,6 @@ namespace MappingTiles
             }
         }
 
-        public abstract void Draw(IEnumerable<Layer> layers, View view);
-
-        public virtual Stream SaveStream(IEnumerable<Layer> layers, View view)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Draw(RenderContext renderContext);
     }
 }
