@@ -40,7 +40,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Layer\BackgroundLayer.cs" />
+    <Compile Include="Layer\BackgroundLayer.cs">
+      <SubType>
+      </SubType>
+    </Compile>
     <Compile Include="Layer\RasterLayer.cs" />
     <Compile Include="Layer\UpdateMode.cs" />
     <Compile Include="Layer\VectorLayer.cs" />

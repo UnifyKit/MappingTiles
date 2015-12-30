@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -29,7 +28,6 @@ namespace MappingTiles
 
         public override void Draw(UpdateMode updateMode, RenderContext renderContext)
         {
-            throw new NotImplementedException();
         }
     }
 }
