@@ -96,7 +96,7 @@ namespace MappingTiles
 
             foreach (var layer in layers.ToList())
             {
-                layer.ViewChanged(updateMode, renderContext);
+                layer.Draw(updateMode, renderContext);
             }
         }
 
