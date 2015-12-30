@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
 namespace MappingTiles
 {
-    public class DrawingParameters
+    public class RenderContext
     {
         private View view;
         private Render render;
-        private Collection<Layer> layers;
 
-        public DrawingParameters()
+        public RenderContext()
         {
         }
 
@@ -26,19 +24,6 @@ namespace MappingTiles
         {
             get { return render; }
             set { render = value; }
-        }
-
-        public Collection<Layer> Layers
-        {
-            get
-            {
-                if (layers == null)
-                {
-                    layers = new Collection<Layer>();
-                }
-
-                return layers;
-            }
         }
     }
 }

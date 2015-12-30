@@ -27,7 +27,7 @@ namespace MappingTiles
         {
         }
 
-        public override void ViewChanged(UpdateMode updateMode, DrawingParameters drawingParameters)
+        public override void ViewChanged(UpdateMode updateMode, RenderContext renderContext)
         {
             throw new NotImplementedException();
         }

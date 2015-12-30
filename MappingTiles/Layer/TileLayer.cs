@@ -41,17 +41,17 @@ namespace MappingTiles
             }
         }
 
-        public override void ViewChanged(UpdateMode updateMode, DrawingParameters parameters)
+        public override void ViewChanged(UpdateMode updateMode, RenderContext renderContext)
         {
             if (TileSource == null)
             {
                 return;
             }
 
-            if (Visible && parameters.View.BoundingBox.Area > 0 && innerTileSource != null && MaxZoomLevel.Resolution > parameters.View.ZoomLevel.Resolution && MinZoomLevel.Resolution < parameters.View.ZoomLevel.Resolution)
+            if (Visible && renderContext.View.BoundingBox.Area > 0 && innerTileSource != null && MaxZoomLevel.Resolution > renderContext.View.ZoomLevel.Resolution && MinZoomLevel.Resolution < renderContext.View.ZoomLevel.Resolution)
             {
-                tileMatrix = new TileMatrix(parameters.View.ZoomLevel.Resolution, innerTileSource.Schema);
-                Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(parameters.View.BoundingBox);
+                tileMatrix = new TileMatrix(renderContext.View.ZoomLevel.Resolution, innerTileSource.Schema);
+                Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(renderContext.View.BoundingBox);
                 foreach (TileInfo tileInfo in tilesInBbox)
                 {
                     this.TileSource.DownloadTile(tileInfo, new AsyncTileRequestCompletedHandler((tileInBytes, error) =>

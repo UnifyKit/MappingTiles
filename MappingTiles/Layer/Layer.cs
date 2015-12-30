@@ -116,6 +116,6 @@ namespace MappingTiles
 
         public abstract void ClearCache();
 
-        public abstract void ViewChanged(UpdateMode updateMode, DrawingParameters parameters);
+        public abstract void ViewChanged(UpdateMode updateMode, RenderContext renderContext);
     }
 }

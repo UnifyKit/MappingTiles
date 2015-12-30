@@ -88,7 +88,7 @@ namespace MappingTiles
 
         public void ViewChanged(UpdateMode updateMode)
         {
-            DrawingParameters drawingParams = new DrawingParameters()
+            RenderContext renderContext = new RenderContext()
             {
                 View = this.Viewport,
                 Render = this.Render
@@ -96,7 +96,7 @@ namespace MappingTiles
 
             foreach (var layer in layers.ToList())
             {
-                layer.ViewChanged(updateMode, drawingParams);
+                layer.ViewChanged(updateMode, renderContext);
             }
         }
 

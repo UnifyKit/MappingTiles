@@ -12,7 +12,7 @@ namespace MappingTiles
             throw new NotImplementedException();
         }
 
-        public override void ViewChanged(UpdateMode updateMode, DrawingParameters parameters)
+        public override void ViewChanged(UpdateMode updateMode, RenderContext renderContext)
         {
             throw new NotImplementedException();
         }
