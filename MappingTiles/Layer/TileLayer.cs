@@ -7,7 +7,11 @@ namespace MappingTiles
         private TileSource innerTileSource;
         private TileMatrix tileMatrix;
 
-        protected TileLayer(TileSource tileSource, string id)
+        public TileLayer(TileSource tileSource)
+            : this(tileSource, Utility.CreateUniqueId())
+        { }
+
+        public TileLayer(TileSource tileSource, string id)
             : base(id)
         {
             SetTileSource(tileSource);

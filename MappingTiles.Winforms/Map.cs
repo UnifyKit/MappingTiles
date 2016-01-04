@@ -79,6 +79,7 @@ namespace MappingTiles.Winforms
 
         protected override void OnPaintBackground(PaintEventArgs pevent)
         {
+            BackColor = System.Drawing.Color.White;
             base.OnPaintBackground(pevent);
         }
 

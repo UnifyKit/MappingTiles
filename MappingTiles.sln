@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MappingTiles.Winforms", "Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MappingTiles.Wpf", "MappingTiles.Wpf\MappingTiles.Wpf.csproj", "{F81AD5D8-9C3F-4B43-9E32-2A50307B3585}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication1", "WindowsFormsApplication1\WindowsFormsApplication1.csproj", "{D657017C-869B-417A-9C9A-99BB7A5B2CFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F81AD5D8-9C3F-4B43-9E32-2A50307B3585}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F81AD5D8-9C3F-4B43-9E32-2A50307B3585}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F81AD5D8-9C3F-4B43-9E32-2A50307B3585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D657017C-869B-417A-9C9A-99BB7A5B2CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D657017C-869B-417A-9C9A-99BB7A5B2CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D657017C-869B-417A-9C9A-99BB7A5B2CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D657017C-869B-417A-9C9A-99BB7A5B2CFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
