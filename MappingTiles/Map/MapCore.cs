@@ -86,13 +86,13 @@ namespace MappingTiles
             }
         }
 
-        public void ViewChanged(UpdateMode updateMode)
+        public void ViewChanged(UpdateMode updateMode, RenderContext renderContext)
         {
-            RenderContext renderContext = new RenderContext()
-            {
-                View = this.Viewport,
-                Render = this.Render
-            };
+            //RenderContext renderContext = new RenderContext()
+            //{
+            //    View = this.Viewport,
+            //    Render = this.Render
+            //};
 
             foreach (var layer in layers.ToList())
             {
