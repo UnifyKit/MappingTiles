@@ -16,6 +16,7 @@ namespace MappingTiles.Winforms
 
         private MapCore mapCore;
         private bool viewInitialized;
+        private RenderContext renderContext;
 
         public Map()
         {
@@ -60,11 +61,6 @@ namespace MappingTiles.Winforms
             this.mapCore.ClearCache();
         }
 
-        protected void ViewChanged(UpdateMode updateMode)
-        {
-            this.mapCore.ViewChanged(updateMode);
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             if (!viewInitialized)
@@ -73,6 +69,17 @@ namespace MappingTiles.Winforms
             }
 
             e.Graphics.Clear(BackColor);
+
+            if (renderContext == null)
+            {
+                renderContext = new RenderContext()
+                {
+                    View = this.Viewport,
+                    Render = GetMapRender()
+                };
+            }
+
+            mapCore.ViewChanged(UpdateMode.All, renderContext);
 
             base.OnPaint(e);
         }
@@ -86,11 +93,13 @@ namespace MappingTiles.Winforms
         protected void InitializeView()
         {
             if (double.IsNaN(Width) || Width == 0) return;
-            if (Viewport == null || Viewport.BoundingBox == null) return;
-            if (Viewport.Center == null) return;
+            if (Viewport == null || Viewport.BoundingBox == null)
+            {
+                Viewport.Width = this.Width;
+                Viewport.Height = this.Height;
+            }
 
             viewInitialized = true;
-            ViewChanged(UpdateMode.All);
         }
 
         protected virtual MapCore GetMapCore()
@@ -98,6 +107,12 @@ namespace MappingTiles.Winforms
             MapCore map = new MapCore();
 
             return map;
+        }
+
+        protected virtual Render GetMapRender()
+        {
+            Render render = new GdiPlusRender();
+            return render;
         }
 
         #region IDisposable Support

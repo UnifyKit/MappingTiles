@@ -27,6 +27,7 @@ namespace MappingTiles
 
             layers = new ObservableCollection<Layer>();
             layers.CollectionChanged += Layers_CollectionChanged;
+            viewport = new View(0, 0, double.NaN);
         }
 
         public ObservableCollection<Layer> Layers
@@ -75,7 +76,7 @@ namespace MappingTiles
 
         private void Layers_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void ClearCache()
