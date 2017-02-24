@@ -21,7 +21,7 @@ namespace MappingTiles
         {
             MapType = mapType;
             AccessKey = accessKey;
-            Schema = new SphericalMercatorTileSchema(TileFormat.Png);
+            Schema = new SphericalMercatorTileSchema();
         }
 
         // https://msdn.microsoft.com/en-us/library/ff428642.aspx
@@ -43,7 +43,7 @@ namespace MappingTiles
 
             requestUri.Replace("{s}", GetNextServerDomain(OptionDomains));
             requestUri.Replace("{quadkey}", tileInfo.ZoomLevel.Id);
-            requestUri.Replace("{k}", tileInfo.Column.ToString(CultureInfo.InvariantCulture));
+            requestUri.Replace("{k}", tileInfo.TileX.ToString(CultureInfo.InvariantCulture));
 
             return new Uri(requestUri);
         }

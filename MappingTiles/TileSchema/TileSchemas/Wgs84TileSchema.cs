@@ -11,7 +11,7 @@ namespace MappingTiles
             : base()
         {
             Crs = "EPSG:4326";
-            BoundingBox = new BoundingBox(-180, -90, 180, 90);
+            MaxExtent = new BoundingBox(-180, -90, 180, 90);
 
             InitializeZoomLevels();
         }

@@ -5,23 +5,32 @@ namespace MappingTiles
 {
     public class TileInfo
     {
+        private int tileX;
+        private int tileY;
+        private ZoomLevel zoomLevel;
         private int width;
         private int height;
-        private ZoomLevel zoomLevel;
+
         private TileSchema tileSchema;
+
+        private byte[] content;
+        private Pixel drawingPosition;
 
         protected TileInfo()
         { }
 
-        public TileInfo(BoundingBox boundingBox, TileSchema tileSchema)
+        public TileInfo(BoundingBox extent, TileSchema tileSchema)
         {
-            Width = 256;
-            Height = 256;
-            BoundingBox = boundingBox;
-            Schema = tileSchema;
+            this.tileX = -1;
+            this.tileY = -1;
 
-            ZoomLevel = GetZoomLevel();
-            InitilizeColumnRowWithBounds();
+            this.width = 256;
+            this.height = 256;
+            this.Extent = extent;
+            this.TileSchema = tileSchema;
+
+            this.ZoomLevel = GetZoomLevel();
+            this.InitilizeColumnRowWithBounds();
         }
 
         public TileInfo(int column, int row, double resolution)
@@ -30,17 +39,20 @@ namespace MappingTiles
 
         public TileInfo(int column, int row, double resolution, TileSchema tileSchema)
         {
-            Width = 256;
-            Height = 256;
-            ZoomLevel = new ZoomLevel(resolution);
-            BoundingBox = GetBoundingBoxByColumnRow(column, row);
+            this.tileX = -1;
+            this.tileY = -1;
+
+            this.width = 256;
+            this.height = 256;
+            this.zoomLevel = new ZoomLevel(resolution);
+            this.Extent = GetBoundingBoxByColumnRow(column, row);
         }
 
         public string Id
         {
             get
             {
-                return string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", Column, Row, ZoomLevel.Id);
+                return string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", TileX, TileY, ZoomLevel.Id);
             }
         }
 
@@ -64,22 +76,20 @@ namespace MappingTiles
             }
         }
 
-        public BoundingBox BoundingBox
+        public BoundingBox Extent
         {
             get;
             private set;
         }
 
-        public int Column
+        public int TileX
         {
-            get;
-            private set;
+            get { return tileX; }
         }
 
-        public int Row
+        public int TileY
         {
-            get;
-            private set;
+            get { return tileY; }
         }
 
         public ZoomLevel ZoomLevel
@@ -88,32 +98,61 @@ namespace MappingTiles
             private set { zoomLevel = value; }
         }
 
-        public TileSchema Schema
+        public byte[] Content
         {
-            get { return tileSchema; }
-            private set { tileSchema = value; }
+            get
+            {
+                return content;
+            }
+            set
+            {
+                content = value;
+            }
+        }
+
+        public Pixel DrawingPosition
+        {
+            get
+            {
+                return drawingPosition;
+            }
+            set
+            {
+                drawingPosition = value;
+            }
+        }
+
+        public TileSchema TileSchema
+        {
+            get
+            {
+                return tileSchema;
+            }
+            set
+            {
+                tileSchema = value;
+            }
         }
 
         public Pixel GetDrawingPosition(int viewPortWidth, int viewPortHeight)
         {
-            InternalChecker.CheckParameterIsNull(Schema, "Schema");
             InternalChecker.CheckParameterIsNull(ZoomLevel, "ZoomLevel");
 
-            double pixelX = BoundingBox.MinX / ZoomLevel.Resolution;
-            double pixelY = BoundingBox.MaxX / ZoomLevel.Resolution;
+            double pixelX = Extent.MinX / ZoomLevel.Resolution;
+            double pixelY = Extent.MaxX / ZoomLevel.Resolution;
 
             return new Pixel((float)pixelX, (float)pixelY);
         }
 
         private ZoomLevel GetZoomLevel()
         {
-            InternalChecker.CheckParameterIsNull(Schema, "Schema");
+            InternalChecker.CheckParameterIsNull(TileSchema, "Schema");
 
-            double resolutionX = BoundingBox.Width / Width;
-            double resolutionY = BoundingBox.Height / Height;
+            double resolutionX = Extent.Width / Width;
+            double resolutionY = Extent.Height / Height;
             double resolution = Math.Max(resolutionX, resolutionY);
 
-            return Schema.GetNearestZoomLevel(resolution);
+            return TileSchema.GetNearestZoomLevel(resolution);
         }
 
         private BoundingBox GetBoundingBoxByColumnRow(int column, int row)
@@ -121,17 +160,17 @@ namespace MappingTiles
             double worldTileWidth = Width * ZoomLevel.Resolution;
             double worldTileHeight = Height * ZoomLevel.Resolution;
 
-            double minX = Schema.BoundingBox.MinX + column * worldTileWidth;
+            double minX = TileSchema.MaxExtent.MinX + column * worldTileWidth;
             double maxX = minX + worldTileWidth;
 
             double maxY;
-            if (Schema.IsYAxisReversed)
+            if (TileSchema.IsYAxisReversed)
             {
-                maxY = Schema.BoundingBox.MaxY - row * worldTileHeight;
+                maxY = TileSchema.MaxExtent.MaxY - row * worldTileHeight;
             }
             else
             {
-                maxY = Schema.BoundingBox.MinY + row * worldTileHeight;
+                maxY = TileSchema.MaxExtent.MinY + row * worldTileHeight;
             }
             double minY = maxY - worldTileHeight;
 
@@ -144,21 +183,21 @@ namespace MappingTiles
             double worldTileWidth = Width * ZoomLevel.Resolution;
             double worldTileHeight = Height * ZoomLevel.Resolution;
 
-            Column = (int)Math.Floor(BoundingBox.MinX - Schema.BoundingBox.MinX / worldTileWidth);
-            if (Schema.IsYAxisReversed)
+            tileX = (int)Math.Floor(Extent.MinX - TileSchema.MaxExtent.MinX / worldTileWidth);
+            if (TileSchema.IsYAxisReversed)
             {
-                Row = (int)Math.Floor((-BoundingBox.MaxY + Schema.BoundingBox.MaxY) / worldTileHeight);
+                tileY = (int)Math.Floor((-Extent.MaxY + TileSchema.MaxExtent.MaxY) / worldTileHeight);
             }
             else
             {
-                Row = (int)Math.Floor((BoundingBox.MinY - Schema.BoundingBox.MinY) / worldTileHeight);
+                tileY = (int)Math.Floor((Extent.MinY - TileSchema.MaxExtent.MinY) / worldTileHeight);
             }
         }
 
         private void TileSizePropertyChanged()
         {
             ZoomLevel = GetZoomLevel();
-            BoundingBox = GetBoundingBoxByColumnRow(Column, Row);
+            Extent = GetBoundingBoxByColumnRow(TileX, TileY);
         }
     }
 }

@@ -1,20 +1,25 @@
 ﻿
+using System;
+
 namespace MappingTiles
 {
     public abstract class TileDownloader
     {
+        public event TileInfoEventHandler TileDownloadCompleted;
+
         protected TileDownloader()
         { }
 
-        public abstract void Cancel(TileSource tileSource);
+        public abstract void StartDownload(Uri uri, TileInfo tileInfo);
 
-        public void Download(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback)
+        public abstract void CancelDownload(TileInfo tileInfo);
+
+        protected virtual void OnTileDownloadComplete(TileInfoEventArgs e)
         {
-            Download(tileInfo, tileSource, callback, NetworkPriority.Normal);
+            if (TileDownloadCompleted != null)
+            {
+                TileDownloadCompleted(this, e);
+            }
         }
-
-        public abstract void Download(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority);
-
-        public abstract void UpdateDownloadPriority(TileSource tileSource, int priority);
     }
 }

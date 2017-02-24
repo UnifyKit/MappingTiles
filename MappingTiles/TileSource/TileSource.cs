@@ -11,6 +11,7 @@ namespace MappingTiles
         private readonly TileDownloader tileDownloader;
 
         private int counter;
+        private TileFormat tileFormat;
 
         protected TileSource()
         { }
@@ -37,6 +38,8 @@ namespace MappingTiles
             this.Schema = tileSchema;
             this.tileCache = tileCache ?? new MemoryTileCache<byte[]>();
             this.tileDownloader = this.tileDownloader ?? new ImageTileDownloader(tileSchema);
+
+            this.tileFormat = TileFormat.Png;
         }
 
         public TileSchema Schema
@@ -49,11 +52,11 @@ namespace MappingTiles
         {
             get
             {
-                return Schema.TileFormat;
+                return tileFormat;
             }
             set
             {
-                Schema.TileFormat = value;
+                tileFormat = value;
             }
         }
 
@@ -67,20 +70,20 @@ namespace MappingTiles
 
         public virtual void DownloadTile(TileInfo tileInfo, AsyncTileRequestCompletedHandler callback)
         {
-            Uri tileUri = GetUri(tileInfo);
+            Uri tileUri = GetTileUri(tileInfo);
             HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(tileUri);
 
-            this.tileDownloader.Download(tileInfo, this, callback);
+            this.tileDownloader.StartDownload(tileUri, tileInfo);
         }
 
-        public Uri GetUri(TileInfo tileInfo)
+        public Uri GetTileUri(TileInfo tileInfo)
         {
             return GetUriCore(tileInfo);
         }
 
         protected abstract Uri GetUriCore(TileInfo tileInfo);
 
-        internal string GetNextServerDomain(Collection<string> serverDomains)
+        protected string GetNextServerDomain(Collection<string> serverDomains)
         {
             lock (counterLocker)
             {

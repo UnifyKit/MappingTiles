@@ -11,7 +11,7 @@ namespace MappingTiles
 
         private readonly string directory;
         private readonly TileFormat format;
-        private TimeSpan expireTime;
+        private TimeSpan expirationTime;
 
         public FileTileCache()
             : this(Path.Combine(Path.GetTempPath(), Utility.CreateUniqueId()), TileFormat.Png, TimeSpan.Zero)
@@ -28,11 +28,11 @@ namespace MappingTiles
         {
         }
 
-        public FileTileCache(string directory, TileFormat format, TimeSpan expireTime)
+        public FileTileCache(string directory, TileFormat format, TimeSpan expirationTime)
         {
             this.directory = directory;
             this.format = format;
-            this.ExpireTime = expireTime;
+            this.expirationTime = expirationTime;
 
             if (!Directory.Exists(directory))
             {
@@ -40,28 +40,30 @@ namespace MappingTiles
             }
         }
 
-        public TimeSpan ExpireTime
+        public TimeSpan ExpirationTime
         {
-            get { return expireTime; }
-            set { expireTime = value; }
+            get { return expirationTime; }
+            set { expirationTime = value; }
         }
 
-        public void Add(TileInfo tileInfo, byte[] data)
+
+        public void Save(TileInfo tileInfo, byte[] tile)
         {
             try
             {
+                string directory = GetDirectoryName(tileInfo);
+
                 readerWriterLocker.EnterWriteLock();
                 if (Exists(tileInfo))
                 {
                     return;
                 }
-                string directory = GetDirectoryName(tileInfo);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
-                WriteToFile(data, tileInfo);
+                WriteToFile(tile, tileInfo);
             }
             finally
             {
@@ -85,7 +87,7 @@ namespace MappingTiles
             }
         }
 
-        public byte[] Get(TileInfo tileInfo)
+        public byte[] Read(TileInfo tileInfo)
         {
             try
             {
@@ -107,7 +109,7 @@ namespace MappingTiles
         {
             if (File.Exists(GetCachedTileFilePathName(tileInfo)))
             {
-                return expireTime == TimeSpan.Zero || (DateTime.Now - new FileInfo(GetCachedTileFilePathName(tileInfo)).LastWriteTime) <= expireTime;
+                return expirationTime == TimeSpan.Zero || (DateTime.Now - new FileInfo(GetCachedTileFilePathName(tileInfo)).LastWriteTime) <= expirationTime;
             }
 
             return false;
@@ -131,13 +133,13 @@ namespace MappingTiles
 
         public string GetCachedTileFilePathName(TileInfo tileInfo)
         {
-            return Path.Combine(GetDirectoryName(tileInfo), string.Format(CultureInfo.InvariantCulture, "{0}.{1}", tileInfo.Row, format.ToString()));
+            return Path.Combine(GetDirectoryName(tileInfo), string.Format(CultureInfo.InvariantCulture, "{0}.{1}", tileInfo.TileY, format.ToString()));
         }
 
         private string GetDirectoryName(TileInfo tileInfo)
         {
             string level = tileInfo.ZoomLevel.Id.ToString(CultureInfo.InvariantCulture);
-            return Path.Combine(directory, level, tileInfo.Column.ToString(CultureInfo.InvariantCulture));
+            return Path.Combine(directory, level, tileInfo.TileX.ToString(CultureInfo.InvariantCulture));
         }
 
         private void WriteToFile(byte[] data, TileInfo tileInfo)

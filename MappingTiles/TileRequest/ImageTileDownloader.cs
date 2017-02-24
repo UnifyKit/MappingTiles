@@ -6,9 +6,9 @@ namespace MappingTiles
 {
     public class ImageTileDownloader : TileDownloader
     {
-        private Dictionary<TileSource, AsyncTileRequest> tileRequests;
-        private TileSchema tileSchema;
-        private readonly ITileCache<byte[]> tileCache;
+        protected Dictionary<string, WebClient> webClientsPool;
+        protected Dictionary<string, Uri> webRequestCache;
+        protected object webClientsPoolLockObject = new object();
 
         public ImageTileDownloader()
             : this(new SphericalMercatorTileSchema())
@@ -17,8 +17,8 @@ namespace MappingTiles
 
         public ImageTileDownloader(TileSchema tileSchema)
         {
-            this.tileSchema = tileSchema;
-            this.tileRequests = new Dictionary<TileSource, AsyncTileRequest>();
+            this.webClientsPool = new Dictionary<string, WebClient>();
+            this.webRequestCache = new Dictionary<string, Uri>();
         }
 
         public IWebProxy WebProxy
@@ -45,47 +45,91 @@ namespace MappingTiles
             }
         }
 
-        public ITileCache<byte[]> TileCache
+        public override void StartDownload(Uri tileUri, TileInfo tileInfo)
         {
-            get
+            lock (this.webClientsPoolLockObject)
             {
-                return AsyncTileRequestQueue.TileCache;
+                if (!this.webClientsPool.ContainsKey(tileInfo.Id))
+                {
+                    WebClient webClient = new WebClient();
+                    if (Credentials != null)
+                    {
+                        webClient.Credentials = Credentials;
+                    }
+                    if (WebProxy != null)
+                    {
+                        webClient.Proxy = WebProxy;
+                    }
+
+                    this.webClientsPool.Add(tileInfo.Id, webClient);
+                    this.webRequestCache.Add(tileInfo.Id, tileUri);
+
+                    ImageTileDownloader imageTileDownloader = this;
+                    webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(imageTileDownloader.DownloadTileDataCompleted);
+                    webClient.DownloadDataAsync(tileUri, tileInfo);
+                }
             }
         }
 
-        public TileSchema TileSchema
+        public override void CancelDownload(TileInfo tileInfo)
         {
-            get { return tileSchema; }
-        }
-
-        public override void Download(TileInfo tileInfo, TileSource tileSource, AsyncTileRequestCompletedHandler callback, NetworkPriority networkPriority)
-        {
-            AsyncTileRequest tileRequest;
-            if (this.tileRequests.TryGetValue(tileSource, out tileRequest))
+            lock (this.webClientsPoolLockObject)
             {
-                throw new InvalidOperationException("Multiple concurrent downloads of the same tile is not supported.");
+                if (this.webClientsPool.ContainsKey(tileInfo.Id))
+                {
+                    this.webClientsPool[tileInfo.Id].CancelAsync();
+
+                    ImageTileDownloader imageTileDownloader = this;
+                    this.webClientsPool[tileInfo.Id].DownloadDataCompleted -= new DownloadDataCompletedEventHandler(imageTileDownloader.DownloadTileDataCompleted);
+                    this.webClientsPool.Remove(tileInfo.Id);
+                    this.webRequestCache.Remove(tileInfo.Id);
+                }
             }
-            AsyncTileRequestQueue.Instance.CreateRequest(tileSource.GetUri(tileInfo), tileInfo, networkPriority, callback);
         }
 
-        public override void Cancel(TileSource tileSource)
+        protected virtual bool ShouldRetryDownload(Exception error)
         {
-            AsyncTileRequest tileRequest;
-            if (!this.tileRequests.TryGetValue(tileSource, out tileRequest))
+            WebException webException = error as WebException;
+            if (webException == null || webException.Status == WebExceptionStatus.RequestCanceled)
             {
-                throw new InvalidOperationException(Messages.TileInProgressCancel);
+                return false;
             }
-            tileRequest.IsAborted = true;
-            tileRequest.AbortIfInQueue();
-            tileRequests.Remove(tileSource);
+            HttpWebResponse response = webException.Response as HttpWebResponse;
+            if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return true;
+            }
+            return false;
         }
 
-        public override void UpdateDownloadPriority(TileSource tileSource, int priority)
+        protected virtual void DownloadTileDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
-            AsyncTileRequest tileRequest;
-            if (this.tileRequests.TryGetValue(tileSource, out tileRequest))
+            TileInfo userState = (TileInfo)e.UserState;
+            if (e.Error == null)
             {
-                tileRequest.NetworkPriority = (NetworkPriority)priority;
+                userState.Content = e.Result;
+                this.OnTileDownloadComplete(new TileInfoEventArgs(userState));
+                lock (this.webClientsPoolLockObject)
+                {
+                    ImageTileDownloader imageTileDownloader = this;
+                    this.webClientsPool[userState.Id].DownloadDataCompleted -= new DownloadDataCompletedEventHandler(imageTileDownloader.DownloadTileDataCompleted);
+                    this.webClientsPool.Remove(userState.Id);
+                    this.webRequestCache.Remove(userState.Id);
+                }
+            }
+            else if (this.ShouldRetryDownload(e.Error))
+            {
+                Uri item = this.webRequestCache[userState.Id];
+                lock (this.webClientsPoolLockObject)
+                {
+                    item = new Uri(this.webClientsPool[userState.Id].BaseAddress);
+
+                    ImageTileDownloader imageTileDownloader = this;
+                    this.webClientsPool[userState.Id].DownloadDataCompleted -= new DownloadDataCompletedEventHandler(imageTileDownloader.DownloadTileDataCompleted);
+                    this.webClientsPool.Remove(userState.Id);
+                    this.webRequestCache.Remove(userState.Id);
+                }
+                this.StartDownload(item, userState);
             }
         }
     }

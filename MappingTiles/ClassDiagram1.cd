@@ -37,7 +37,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.TileMatrix">
-    <Position X="11.25" Y="11.75" Width="4.25" />
+    <Position X="11.25" Y="12" Width="4.25" />
     <Compartments>
       <Compartment Name="Private" Collapsed="true" />
     </Compartments>
@@ -47,7 +47,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.TileRange" BaseTypeListCollapsed="true">
-    <Position X="15.75" Y="11.75" Width="5.25" />
+    <Position X="15.75" Y="12" Width="5.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAAiAAACIAAAAAAAIAAAAAAAAAAAiA=</HashCode>
       <FileName>TileSchema\TileRange.cs</FileName>
@@ -64,24 +64,16 @@
   <Class Name="MappingTiles.TileDownloader">
     <Position X="11.5" Y="6.25" Width="8.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAACAAAEAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAQAAAAAACAAAEAAAAAAAA=</HashCode>
       <FileName>TileRequest\TileDownloader.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.ImageTileDownloader">
-    <Position X="11.25" Y="8.5" Width="8.25" />
+    <Position X="11.5" Y="8.75" Width="8.25" />
     <Compartments>
       <Compartment Name="Private" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="MappingTiles.TileDownloader" FixedToPoint="true">
-      <Path>
-        <Point X="15.625" Y="8.382" />
-        <Point X="15.625" Y="8.44" />
-        <Point X="15.67" Y="8.44" />
-        <Point X="15.67" Y="8.5" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAEAAQABAgAAAAAAAAAAAAgAGAACAAgEAAAAAAAA=</HashCode>
       <FileName>TileRequest\ImageTileDownloader.cs</FileName>

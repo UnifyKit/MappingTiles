@@ -13,12 +13,12 @@ namespace MappingTiles
         private readonly object syncLocker = new object();
 
         private readonly Dictionary<TileInfo, T> tileDatas;
-        private readonly Dictionary<TileInfo, DateTime> queriedDatas;
+        private readonly Dictionary<TileInfo, DateTime> queriedDate;
         private readonly Func<TileInfo, bool> keepTileInMemory;
         private bool isDisposed;
 
         public MemoryTileCache()
-            : this(50, 100, null)
+            : this(50, 2000, null)
         {
         }
 
@@ -46,7 +46,7 @@ namespace MappingTiles
 
             this.keepTileInMemory = keepTileInMemory;
             this.tileDatas = new Dictionary<TileInfo, T>();
-            this.queriedDatas = new Dictionary<TileInfo, DateTime>();
+            this.queriedDate = new Dictionary<TileInfo, DateTime>();
         }
 
         public int TileCount
@@ -69,34 +69,33 @@ namespace MappingTiles
             set;
         }
 
-        public void Add(TileInfo tileInfo, T data)
+        public void Save(TileInfo tileInfo, T tile)
         {
             lock (syncLocker)
             {
                 if (tileDatas.ContainsKey(tileInfo))
                 {
-                    tileDatas[tileInfo] = data;
-                    queriedDatas[tileInfo] = DateTime.Now;
+                    queriedDate[tileInfo] = DateTime.Now;
                 }
                 else
                 {
-                    queriedDatas.Add(tileInfo, DateTime.Now);
-                    tileDatas.Add(tileInfo, data);
+                    queriedDate.Add(tileInfo, DateTime.Now);
+                    tileDatas.Add(tileInfo, tile);
                     CleanUp();
                     OnNotifyPropertyChange("TileCount");
                 }
             }
         }
 
-        public void Remove(int column, int row, ZoomLevel zoomLevel)
+        public void Remove(int tileX, int tileY, ZoomLevel zoomLevel)
         {
-            Remove(column, row, zoomLevel.Id);
+            Remove(tileX, tileY, zoomLevel.Id);
         }
 
-        public void Remove(int column, int row, string zoomLevelId)
+        public void Remove(int tileX, int tileY, string zoomLevelId)
         {
-            string id = string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", column, row, zoomLevelId);
-            var queriedTile = queriedDatas.Keys.Where(key => key.Id.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            string id = string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", tileX, tileY, zoomLevelId);
+            var queriedTile = queriedDate.Keys.Where(key => key.Id.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (queriedTile != null)
             {
                 Remove(queriedTile);
@@ -118,30 +117,30 @@ namespace MappingTiles
                     disposable.Dispose();
                 }
 
-                queriedDatas.Remove(tileInfo);
+                queriedDate.Remove(tileInfo);
                 tileDatas.Remove(tileInfo);
                 OnNotifyPropertyChange("TileCount");
             }
         }
 
-        public T Get(int column, int row, ZoomLevel zoomLevel)
+        public T Read(int tileX, int tileY, ZoomLevel zoomLevel)
         {
-            return Get(column, row, zoomLevel.Id);
+            return Read(tileX, tileY, zoomLevel.Id);
         }
 
-        public T Get(int column, int row, string zoomLevelId)
+        public T Read(int tileX, int tileY, string zoomLevelId)
         {
-            string id = string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", column, row, zoomLevelId);
-            var queriedTile = queriedDatas.Keys.Where(key => key.Id.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+            string id = string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", tileX, tileY, zoomLevelId);
+            var queriedTile = queriedDate.Keys.Where(key => key.Id.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             if (queriedTile != null)
             {
-                return Get(queriedTile);
+                return Read(queriedTile);
             }
 
             return default(T);
         }
 
-        public T Get(TileInfo tileInfo)
+        public T Read(TileInfo tileInfo)
         {
             lock (syncLocker)
             {
@@ -149,7 +148,7 @@ namespace MappingTiles
                 {
                     return default(T);
                 }
-                queriedDatas[tileInfo] = DateTime.Now;
+                queriedDate[tileInfo] = DateTime.Now;
 
                 return tileDatas[tileInfo];
             }
@@ -160,7 +159,7 @@ namespace MappingTiles
             lock (syncLocker)
             {
                 DisposeTilesIfDisposable();
-                queriedDatas.Clear();
+                queriedDate.Clear();
                 tileDatas.Clear();
                 OnNotifyPropertyChange("TileCount");
             }
@@ -174,7 +173,7 @@ namespace MappingTiles
             }
 
             DisposeTilesIfDisposable();
-            queriedDatas.Clear();
+            queriedDate.Clear();
             tileDatas.Clear();
             isDisposed = true;
         }
@@ -210,16 +209,16 @@ namespace MappingTiles
             var numberOfTilesToKeepInMemory = 0;
             if (keepTileInMemory != null)
             {
-                var tilesToKeep = queriedDatas.Keys.Where(keepTileInMemory).ToList();
+                var tilesToKeep = queriedDate.Keys.Where(keepTileInMemory).ToList();
                 foreach (var index in tilesToKeep)
                 {
-                    queriedDatas[index] = DateTime.Now; // touch tiles to keep
+                    queriedDate[index] = DateTime.Now; // touch tiles to keep
                 }
                 numberOfTilesToKeepInMemory = tilesToKeep.Count;
             }
 
             var numberOfTilesToRemove = tileDatas.Count - Math.Max(MinTiles, numberOfTilesToKeepInMemory);
-            var oldItems = queriedDatas.OrderBy(p => p.Value).Take(numberOfTilesToRemove);
+            var oldItems = queriedDate.OrderBy(p => p.Value).Take(numberOfTilesToRemove);
             foreach (var oldItem in oldItems)
             {
                 Remove(oldItem.Key);

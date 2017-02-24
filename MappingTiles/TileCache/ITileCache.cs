@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace MappingTiles
 {
     public interface ITileCache<T>
@@ -8,7 +9,7 @@ namespace MappingTiles
         /// </summary>
         /// <param name="tileInfo">The id of the tile to add. If the tile already exists no exepection is thrown.</param>
         /// <param name="tile">The tile data</param>
-        void Add(TileInfo tileInfo, T tile);
+        void Save(TileInfo tileInfo, T tile);
 
         /// <summary>
         /// Removes the tile that corresponds with the index passed as argument. When the tile is not found no exception is thrown.
@@ -21,7 +22,7 @@ namespace MappingTiles
         /// </summary>
         /// <param name="index">The id of the tile to find</param>
         /// <returns>The tile data that corresponds with the id or null.</returns>
-        T Get(TileInfo tileInfo);
+        T Read(TileInfo tileInfo);
 
         /// <summary>
         /// Clears all the data cached.

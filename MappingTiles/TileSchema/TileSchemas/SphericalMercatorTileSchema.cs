@@ -12,25 +12,19 @@ namespace MappingTiles
         private int numberOfZoomLevels = 20;
 
         public SphericalMercatorTileSchema() :
-            this(GetZoomLevels(defaultZoomLevelNumbers), TileFormat.Png)
+            this(GetZoomLevels(defaultZoomLevelNumbers))
         {
         }
 
-        public SphericalMercatorTileSchema(TileFormat format) :
-            this(GetZoomLevels(defaultZoomLevelNumbers), TileFormat.Png)
+        internal SphericalMercatorTileSchema(IEnumerable<ZoomLevel> zoomLevels)
         {
-        }
-
-        internal SphericalMercatorTileSchema(IEnumerable<ZoomLevel> zoomLevels, TileFormat format)
-        {
-            TileFormat = format;
             Crs = "EPSG:3857";
             IsYAxisReversed = true;
             foreach (var zoomLevel in zoomLevels)
             {
                 ZoomLevels.Add(zoomLevel);
             }
-            BoundingBox = new BoundingBox(-20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789);
+            MaxExtent = new BoundingBox(-20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789);
         }
 
         public int NumberOfZoomLevels

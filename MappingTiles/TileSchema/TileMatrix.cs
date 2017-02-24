@@ -68,7 +68,7 @@ namespace MappingTiles
         {
             get
             {
-                return (int)Math.Ceiling(TileSchema.BoundingBox.Width / ZoomLevel.Resolution);
+                return (int)Math.Ceiling(TileSchema.MaxExtent.Width / ZoomLevel.Resolution);
             }
         }
 
@@ -79,7 +79,7 @@ namespace MappingTiles
         {
             get
             {
-                return (int)Math.Ceiling(TileSchema.BoundingBox.Height / ZoomLevel.Resolution);
+                return (int)Math.Ceiling(TileSchema.MaxExtent.Height / ZoomLevel.Resolution);
             }
         }
 
@@ -92,19 +92,19 @@ namespace MappingTiles
             var tileRange = new TileRange(-1, -1);
             if (TileSchema.IsYAxisReversed)
             {
-                var firstCol = (int)Math.Floor((boundingBox.MinX - TileSchema.BoundingBox.MinX) / tileWorldUnits);
-                var firstRow = (int)Math.Floor((-boundingBox.MaxY + TileSchema.BoundingBox.MaxY) / tileWorldUnits);
-                var lastCol = (int)Math.Ceiling((boundingBox.MaxX - TileSchema.BoundingBox.MinX) / tileWorldUnits);
-                var lastRow = (int)Math.Ceiling((-boundingBox.MinY + TileSchema.BoundingBox.MaxY) / tileWorldUnits);
+                var firstCol = (int)Math.Floor((boundingBox.MinX - TileSchema.MaxExtent.MinX) / tileWorldUnits);
+                var firstRow = (int)Math.Floor((-boundingBox.MaxY + TileSchema.MaxExtent.MaxY) / tileWorldUnits);
+                var lastCol = (int)Math.Ceiling((boundingBox.MaxX - TileSchema.MaxExtent.MinX) / tileWorldUnits);
+                var lastRow = (int)Math.Ceiling((-boundingBox.MinY + TileSchema.MaxExtent.MaxY) / tileWorldUnits);
 
                 tileRange = new TileRange(firstCol, firstRow, lastCol - firstCol, lastRow - firstRow);
             }
             else
             {
-                var firstCol = (int)Math.Floor((boundingBox.MinX - TileSchema.BoundingBox.MinX) / tileWorldUnits);
-                var firstRow = (int)Math.Floor((boundingBox.MinY - TileSchema.BoundingBox.MaxY) / tileWorldUnits);
-                var lastCol = (int)Math.Ceiling((boundingBox.MaxX - TileSchema.BoundingBox.MinX) / tileWorldUnits);
-                var lastRow = (int)Math.Ceiling((boundingBox.MaxY - TileSchema.BoundingBox.MaxY) / tileWorldUnits);
+                var firstCol = (int)Math.Floor((boundingBox.MinX - TileSchema.MaxExtent.MinX) / tileWorldUnits);
+                var firstRow = (int)Math.Floor((boundingBox.MinY - TileSchema.MaxExtent.MaxY) / tileWorldUnits);
+                var lastCol = (int)Math.Ceiling((boundingBox.MaxX - TileSchema.MaxExtent.MinX) / tileWorldUnits);
+                var lastRow = (int)Math.Ceiling((boundingBox.MaxY - TileSchema.MaxExtent.MaxY) / tileWorldUnits);
 
                 tileRange = new TileRange(firstCol, firstRow, lastCol - firstCol, lastRow - firstRow);
             }
@@ -126,20 +126,20 @@ namespace MappingTiles
             if (TileSchema.IsYAxisReversed)
             {
                 var tileWorldUnits = resolution * TileWidth;
-                var minX = range.StartColumn * tileWorldUnits + TileSchema.BoundingBox.MinX;
-                var minY = -(range.StartRow + range.NumberOfRows) * tileWorldUnits + TileSchema.BoundingBox.MaxY;
-                var maxX = (range.StartColumn + range.NumberOfColumns) * tileWorldUnits + TileSchema.BoundingBox.MinX;
-                var maxY = -(range.StartRow) * tileWorldUnits + TileSchema.BoundingBox.MaxY;
+                var minX = range.StartColumn * tileWorldUnits + TileSchema.MaxExtent.MinX;
+                var minY = -(range.StartRow + range.NumberOfRows) * tileWorldUnits + TileSchema.MaxExtent.MaxY;
+                var maxX = (range.StartColumn + range.NumberOfColumns) * tileWorldUnits + TileSchema.MaxExtent.MinX;
+                var maxY = -(range.StartRow) * tileWorldUnits + TileSchema.MaxExtent.MaxY;
 
                 return new BoundingBox(minX, minY, maxX, maxY);
             }
             else
             {
                 var tileWorldUnits = resolution * TileWidth;
-                var minX = range.StartColumn * tileWorldUnits + TileSchema.BoundingBox.MinX;
-                var minY = range.StartRow * tileWorldUnits + TileSchema.BoundingBox.MaxY;
-                var maxX = (range.StartColumn + range.NumberOfColumns) * tileWorldUnits + TileSchema.BoundingBox.MinX;
-                var maxY = (range.StartRow + range.NumberOfRows) * tileWorldUnits + TileSchema.BoundingBox.MaxY;
+                var minX = range.StartColumn * tileWorldUnits + TileSchema.MaxExtent.MinX;
+                var minY = range.StartRow * tileWorldUnits + TileSchema.MaxExtent.MaxY;
+                var maxX = (range.StartColumn + range.NumberOfColumns) * tileWorldUnits + TileSchema.MaxExtent.MinX;
+                var maxY = (range.StartRow + range.NumberOfRows) * tileWorldUnits + TileSchema.MaxExtent.MaxY;
 
                 return new BoundingBox(minX, minY, maxX, maxY);
             }

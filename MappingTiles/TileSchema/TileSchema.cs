@@ -9,17 +9,10 @@ namespace MappingTiles
         protected TileSchema()
         {
             this.IsYAxisReversed = false;
-            this.TileFormat = TileFormat.Png;
             this.ZoomLevels = new Collection<ZoomLevel>();
         }
 
-        public BoundingBox BoundingBox
-        {
-            get;
-            set;
-        }
-
-        public TileFormat TileFormat
+        public BoundingBox MaxExtent
         {
             get;
             set;

@@ -40,15 +40,15 @@ namespace MappingTiles
 
             requestUri.Replace("{s}", GetNextServerDomain(OptionDomains));
             requestUri.Replace("{z}", tileInfo.ZoomLevel.Id);
-            requestUri.Replace("{x}", tileInfo.Column.ToString(CultureInfo.InvariantCulture));
-            requestUri.Replace("{y}", tileInfo.Row.ToString(CultureInfo.InvariantCulture));
+            requestUri.Replace("{x}", tileInfo.TileX.ToString(CultureInfo.InvariantCulture));
+            requestUri.Replace("{y}", tileInfo.TileY.ToString(CultureInfo.InvariantCulture));
 
             return new Uri(requestUri);
         }
 
         private void InitializeTileSchema(OpenStreetMapType mapType)
         {
-            Schema = new SphericalMercatorTileSchema(TileFormat.Png);
+            Schema = new SphericalMercatorTileSchema();
             switch (mapType)
             {
                 case OpenStreetMapType.CycleMap:
