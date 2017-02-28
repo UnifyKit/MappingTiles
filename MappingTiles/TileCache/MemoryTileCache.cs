@@ -12,7 +12,7 @@ namespace MappingTiles
 
         private readonly object syncLocker = new object();
 
-        private readonly Dictionary<TileInfo, T> tileDatas;
+        private readonly Dictionary<string, T> tileDatas;
         private readonly Dictionary<TileInfo, DateTime> queriedDate;
         private readonly Func<TileInfo, bool> keepTileInMemory;
         private bool isDisposed;
@@ -45,7 +45,7 @@ namespace MappingTiles
             this.MaxTiles = maxTiles;
 
             this.keepTileInMemory = keepTileInMemory;
-            this.tileDatas = new Dictionary<TileInfo, T>();
+            this.tileDatas = new Dictionary<string, T>();
             this.queriedDate = new Dictionary<TileInfo, DateTime>();
         }
 
@@ -73,14 +73,14 @@ namespace MappingTiles
         {
             lock (syncLocker)
             {
-                if (tileDatas.ContainsKey(tileInfo))
+                if (tileDatas.ContainsKey(tileInfo.Id))
                 {
                     queriedDate[tileInfo] = DateTime.Now;
                 }
                 else
                 {
                     queriedDate.Add(tileInfo, DateTime.Now);
-                    tileDatas.Add(tileInfo, tile);
+                    tileDatas.Add(tileInfo.Id, tile);
                     CleanUp();
                     OnNotifyPropertyChange("TileCount");
                 }
@@ -106,19 +106,19 @@ namespace MappingTiles
         {
             lock (syncLocker)
             {
-                if (!tileDatas.ContainsKey(tileInfo))
+                if (!tileDatas.ContainsKey(tileInfo.Id))
                 {
                     return;
                 }
 
-                var disposable = (tileDatas[tileInfo] as IDisposable);
+                var disposable = (tileDatas[tileInfo.Id] as IDisposable);
                 if (disposable != null)
                 {
                     disposable.Dispose();
                 }
 
                 queriedDate.Remove(tileInfo);
-                tileDatas.Remove(tileInfo);
+                tileDatas.Remove(tileInfo.Id);
                 OnNotifyPropertyChange("TileCount");
             }
         }
@@ -144,13 +144,13 @@ namespace MappingTiles
         {
             lock (syncLocker)
             {
-                if (!tileDatas.ContainsKey(tileInfo))
+                if (!tileDatas.ContainsKey(tileInfo.Id))
                 {
                     return default(T);
                 }
                 queriedDate[tileInfo] = DateTime.Now;
 
-                return tileDatas[tileInfo];
+                return tileDatas[tileInfo.Id];
             }
         }
 

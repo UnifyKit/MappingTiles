@@ -29,15 +29,18 @@
       <FileName>TileSchema\TileSchemas\Wgs84TileSchema.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MappingTiles.TileInfo" Collapsed="true">
-    <Position X="12.5" Y="12.5" Width="1.5" />
+  <Class Name="MappingTiles.TileInfo">
+    <Position X="6.25" Y="14.75" Width="4.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>ACACAAAABBAAAAQAQgRIAEAECCACAgAAAAAAAAAAAAA=</HashCode>
+      <HashCode>ECACAAgABhAIAAQBQgQIAUAACAACAAAAAgAAAAAAAAA=</HashCode>
       <FileName>TileSchema\TileInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.TileMatrix">
-    <Position X="11.25" Y="12" Width="4.25" />
+    <Position X="11.5" Y="12.5" Width="4.25" />
     <Compartments>
       <Compartment Name="Private" Collapsed="true" />
     </Compartments>
@@ -47,7 +50,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.TileRange" BaseTypeListCollapsed="true">
-    <Position X="15.75" Y="12" Width="5.25" />
+    <Position X="16" Y="12.5" Width="5.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAAiAAACIAAAAAAAIAAAAAAAAAAAiA=</HashCode>
       <FileName>TileSchema\TileRange.cs</FileName>
@@ -57,14 +60,14 @@
   <Class Name="MappingTiles.TileSchema">
     <Position X="6.75" Y="0.5" Width="3.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAAAAAABAAAICAAAAACAAACAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAIAAAAAAAAABAAAAAAAAAACAAACAAAAAEA=</HashCode>
       <FileName>TileSchema\TileSchema.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MappingTiles.TileDownloader">
     <Position X="11.5" Y="6.25" Width="8.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAQAAAAAACAAAEAAAAAAAA=</HashCode>
+      <HashCode>AABAAAAAAAAAAAAAAAABAAAQAAAAAAAAAAAAAAAQAAA=</HashCode>
       <FileName>TileRequest\TileDownloader.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -75,7 +78,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAEAAQABAgAAAAAAAAAAAAgAGAACAAgEAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAgAAAiABAAAAQAAAEAAAAAAAAAIAQAAA=</HashCode>
       <FileName>TileRequest\ImageTileDownloader.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -110,7 +113,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAQEBAAABAEQAAACAAAAAEAAgAAAMAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAQEBAAABAEQAAACAAAAAEAAwAACEAAAAAAAAAAAA=</HashCode>
       <FileName>TileSource\TileSource.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -121,7 +124,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAIAAAAEAAAwAAJAEAAADAAAAAAAAAAEAAQAAAFAAAA=</HashCode>
+      <HashCode>AAAAAIAAAAAwAAIAEAAADAAgAAAAAAIEAAACAAFAAAA=</HashCode>
       <FileName>TileCache\FileTileCache.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -133,7 +136,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BCIAAgACCCAACABAEAAABAAAgAQAAAIAAAAAAkBAAAA=</HashCode>
+      <HashCode>ACAAAoACCCAACAAAEAAABAAghAQAAAIAAAAAAkBAAAA=</HashCode>
       <FileName>TileCache\MemoryTileCache.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -141,7 +144,7 @@
   <Interface Name="MappingTiles.ITileCache&lt;T&gt;">
     <Position X="4" Y="7.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <HashCode>AAAAAIAAAAAAAAAAAAAABAAgAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>TileCache\ITileCache.cs</FileName>
     </TypeIdentifier>
   </Interface>

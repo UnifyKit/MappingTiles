@@ -79,7 +79,7 @@ namespace MappingTiles.Winforms
                 };
             }
 
-            mapCore.ViewChanged(UpdateMode.All, renderContext);
+            mapCore.ViewChanged(renderContext, UpdateMode.All);
 
             base.OnPaint(e);
         }

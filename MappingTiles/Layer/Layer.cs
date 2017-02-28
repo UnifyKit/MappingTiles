@@ -10,18 +10,25 @@ namespace MappingTiles
         private string id;
         private string name;
         private bool visible;
-        private ZoomLevel minZoomLevel;
-        private ZoomLevel maxZoomLevel;
         private double opacity;
 
+        private Source datasource;
+
         protected Layer()
-            : this(Utility.CreateUniqueId())
+            : this(null, Utility.CreateUniqueId())
+        { }
+        protected Layer(string id)
+            : this(null, id)
         { }
 
-        protected Layer(string id)
+        protected Layer(Source datasource)
+            : this(datasource, Utility.CreateUniqueId())
         {
-            this.minZoomLevel = new ZoomLevel(0);
-            this.MaxZoomLevel = new ZoomLevel(); // take the max resolution
+        }
+
+        protected Layer(Source datasource, string id)
+        {
+            this.datasource = datasource;
             this.id = id;
             this.Opacity = 1;
         }
@@ -40,7 +47,6 @@ namespace MappingTiles
             {
                 return name;
             }
-
             set
             {
                 name = value;
@@ -53,42 +59,9 @@ namespace MappingTiles
             {
                 return visible;
             }
-
             set
             {
                 visible = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the minimum zoom level (inclusive) at which this layer will be visible.
-        /// </summary>
-        public ZoomLevel MinZoomLevel
-        {
-            get
-            {
-                return minZoomLevel;
-            }
-
-            set
-            {
-                minZoomLevel = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the maximum  zoom level (inclusive) at which this layer will be visible.
-        /// </summary>
-        public ZoomLevel MaxZoomLevel
-        {
-            get
-            {
-                return maxZoomLevel;
-            }
-
-            set
-            {
-                maxZoomLevel = value;
             }
         }
 
@@ -98,10 +71,21 @@ namespace MappingTiles
             {
                 return opacity;
             }
-
             set
             {
                 opacity = value;
+            }
+        }
+
+        public Source Datasource
+        {
+            get
+            {
+                return datasource;
+            }
+            set
+            {
+                datasource = value;
             }
         }
 
@@ -116,6 +100,6 @@ namespace MappingTiles
 
         public abstract void ClearCache();
 
-        public abstract void Draw(UpdateMode updateMode, RenderContext renderContext);
+        public abstract void Draw(RenderContext renderContext, UpdateMode updateMode);
     }
 }

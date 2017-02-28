@@ -4,7 +4,7 @@ namespace MappingTiles
 {
     public class TileLayer : Layer
     {
-        private TileSource innerTileSource;
+        private TileSource innerSource;
         private TileMatrix tileMatrix;
 
         public TileLayer(TileSource tileSource)
@@ -12,49 +12,35 @@ namespace MappingTiles
         { }
 
         public TileLayer(TileSource tileSource, string id)
-            : base(id)
+            : base(tileSource, id)
         {
-            SetTileSource(tileSource);
-        }
-
-        public TileSource TileSource
-        {
-            get
-            {
-                return innerTileSource;
-            }
-        }
-
-        protected void SetTileSource(TileSource tileSource)
-        {
-            if (tileSource != null)
-            {
-                this.innerTileSource = tileSource;
-            }
+            innerSource = tileSource;
         }
 
         public override void ClearCache()
         {
-            if (TileSource != null)
+            if (innerSource != null)
             {
-                TileSource.TileCache.Clear();
+                innerSource.TileCache.Clear();
             }
         }
 
-        public override void Draw(UpdateMode updateMode, RenderContext renderContext)
+        public override void Draw(RenderContext renderContext, UpdateMode updateMode)
         {
-            if (TileSource == null)
+            if (innerSource == null || innerSource.Schema == null)
             {
                 return;
             }
 
-            if (Visible && renderContext.View.BoundingBox.Area > 0 && innerTileSource != null && MaxZoomLevel.Resolution > renderContext.View.ZoomLevel.Resolution && MinZoomLevel.Resolution < renderContext.View.ZoomLevel.Resolution)
+            if (Visible && renderContext.View.BoundingBox.Area > 0
+                && innerSource.Schema.MaxZoomLevel.Resolution > renderContext.View.ZoomLevel.Resolution
+                && innerSource.Schema.MinZoomLevel.Resolution < renderContext.View.ZoomLevel.Resolution)
             {
-                tileMatrix = new TileMatrix(renderContext.View.ZoomLevel.Resolution, innerTileSource.Schema);
+                tileMatrix = new TileMatrix(renderContext.View.ZoomLevel.Resolution, innerSource.Schema);
                 Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(renderContext.View.BoundingBox);
                 foreach (TileInfo tileInfo in tilesInBbox)
                 {
-                    this.TileSource.DownloadTile(tileInfo, new AsyncTileRequestCompletedHandler((tileInBytes, error) =>
+                    this.innerSource.DownloadTile(tileInfo, new AsyncTileRequestCompletedHandler((tileInBytes, error) =>
                     {
                         renderContext.RenderObject = tileInBytes;
                         renderContext.RenderPosition = tileInfo.GetDrawingPosition((int)renderContext.View.Width, (int)renderContext.View.Height);
@@ -63,13 +49,6 @@ namespace MappingTiles
                     }));
                 }
             }
-        }
-
-        protected virtual TileDownloader CreateTileDownloader(TileSchema tileSchema)
-        {
-            TileDownloader tileDownloader = new ImageTileDownloader(tileSchema);
-
-            return tileDownloader;
         }
     }
 }

@@ -87,7 +87,7 @@ namespace MappingTiles
             }
         }
 
-        public void ViewChanged(UpdateMode updateMode, RenderContext renderContext)
+        public void ViewChanged(RenderContext renderContext, UpdateMode updateMode)
         {
             //RenderContext renderContext = new RenderContext()
             //{
@@ -97,7 +97,7 @@ namespace MappingTiles
 
             foreach (var layer in layers.ToList())
             {
-                layer.Draw(updateMode, renderContext);
+                layer.Draw(renderContext, updateMode);
             }
         }
 

@@ -1,47 +1,16 @@
-﻿using System.Globalization;
-
-namespace MappingTiles
+﻿namespace MappingTiles
 {
     public class Wgs84TileSchema : TileSchema
     {
         private const double MaxResolution = 1.40625;
-        private int numberOfZoomLevels = 20;
 
         public Wgs84TileSchema()
             : base()
         {
             Crs = "EPSG:4326";
             MaxExtent = new BoundingBox(-180, -90, 180, 90);
-
-            InitializeZoomLevels();
-        }
-
-        public int NumberOfZoomLevels
-        {
-            get { return numberOfZoomLevels; }
-            set
-            {
-                if (numberOfZoomLevels != value)
-                {
-                    InitializeZoomLevels();
-                }
-                
-                numberOfZoomLevels = value;
-            }
-        }
-
-        private void InitializeZoomLevels()
-        {
-            ZoomLevels.Clear();
-
-            double resolution = MaxResolution;
-            for (int i = 0; i < numberOfZoomLevels; i++)
-			{
-                var ZoomLevel = new ZoomLevel(resolution, (i + 1).ToString(CultureInfo.InvariantCulture));
-                ZoomLevels.Add(ZoomLevel);
-
-                resolution /= 2;
-			}
+            MinZoomLevel = new ZoomLevel(0);
+            MaxZoomLevel = new ZoomLevel(MaxResolution);
         }
     }
 }

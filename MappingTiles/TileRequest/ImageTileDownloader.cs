@@ -6,47 +6,34 @@ namespace MappingTiles
 {
     public class ImageTileDownloader : TileDownloader
     {
-        protected Dictionary<string, WebClient> webClientsPool;
-        protected Dictionary<string, Uri> webRequestCache;
         protected object webClientsPoolLockObject = new object();
 
-        public ImageTileDownloader()
-            : this(new SphericalMercatorTileSchema())
-        {
-        }
+        protected Dictionary<string, WebClient> webClientsPool;
+        protected Dictionary<string, Uri> webRequestCache;
 
-        public ImageTileDownloader(TileSchema tileSchema)
+        public ImageTileDownloader()
+            : base()
         {
             this.webClientsPool = new Dictionary<string, WebClient>();
             this.webRequestCache = new Dictionary<string, Uri>();
         }
 
-        public IWebProxy WebProxy
-        {
-            get
-            {
-                return AsyncTileRequestQueue.WebProxy;
-            }
-            set
-            {
-                AsyncTileRequestQueue.WebProxy = value;
-            }
-        }
-
-        public ICredentials Credentials
-        {
-            get
-            {
-                return AsyncTileRequestQueue.Credentials;
-            }
-            set
-            {
-                AsyncTileRequestQueue.Credentials = value;
-            }
-        }
-
         public override void StartDownload(Uri tileUri, TileInfo tileInfo)
         {
+            if (TileCache != null)
+            {
+                byte[] bytes = TileCache.Read(tileInfo);
+                if (bytes != null)
+                {
+                    tileInfo.Content = bytes;
+
+                    // raise the event
+                    this.OnTileDownloadComplete(new TileInfoEventArgs(tileInfo));
+
+                    return;
+                }
+            }
+
             lock (this.webClientsPoolLockObject)
             {
                 if (!this.webClientsPool.ContainsKey(tileInfo.Id))
@@ -108,6 +95,12 @@ namespace MappingTiles
             if (e.Error == null)
             {
                 userState.Content = e.Result;
+                // if tileCache is applied, cache the request tile
+                if (TileCache != null)
+                {
+                    TileCache.Save(userState, userState.Content);
+                }
+
                 this.OnTileDownloadComplete(new TileInfoEventArgs(userState));
                 lock (this.webClientsPoolLockObject)
                 {

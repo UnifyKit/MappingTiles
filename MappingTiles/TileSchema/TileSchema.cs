@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 
 namespace MappingTiles
 {
     public abstract class TileSchema
     {
+        private ZoomLevel minZoomLevel;
+        private ZoomLevel maxZoomLevel;
+        private Collection<ZoomLevel> zoomLevels;
+
+        private int numberOfZoomLevels = 20;
+
         protected TileSchema()
         {
             this.IsYAxisReversed = false;
-            this.ZoomLevels = new Collection<ZoomLevel>();
+            this.zoomLevels = new Collection<ZoomLevel>();
+            this.minZoomLevel = new ZoomLevel(0);
+            this.maxZoomLevel = new ZoomLevel(); // take the max resolution
         }
 
         public BoundingBox MaxExtent
@@ -18,10 +27,49 @@ namespace MappingTiles
             set;
         }
 
-        public Collection<ZoomLevel> ZoomLevels
+        public ZoomLevel MinZoomLevel
         {
-            get;
-            private set;
+            get
+            {
+                return minZoomLevel;
+            }
+            set
+            {
+                if (minZoomLevel != value)
+                {
+                    minZoomLevel = value;
+                    GetZoomLevelsCore();
+                }
+            }
+        }
+
+        public ZoomLevel MaxZoomLevel
+        {
+            get
+            {
+                return maxZoomLevel;
+            }
+            set
+            {
+                if (maxZoomLevel != value)
+                {
+                    maxZoomLevel = value;
+                    GetZoomLevelsCore();
+                }
+            }
+        }
+
+        public int NumberOfZoomLevels
+        {
+            get { return numberOfZoomLevels; }
+            set
+            {
+                if (numberOfZoomLevels != value)
+                {
+                    numberOfZoomLevels = value;
+                    GetZoomLevelsCore();
+                }
+            }
         }
 
         public bool IsYAxisReversed
@@ -36,11 +84,37 @@ namespace MappingTiles
             set;
         }
 
+        public Collection<ZoomLevel> GetZoomLevels()
+        {
+            if (zoomLevels.Count <= 0)
+            {
+                return GetZoomLevelsCore();
+            }
+
+            return zoomLevels;
+        }
+
+        protected virtual Collection<ZoomLevel> GetZoomLevelsCore()
+        {
+            zoomLevels.Clear();
+
+            double resolution = MaxZoomLevel.Resolution;
+            for (int i = 0; i < numberOfZoomLevels; i++)
+            {
+                var zoomLevel = new ZoomLevel(resolution, (i + 1).ToString(CultureInfo.InvariantCulture));
+                zoomLevels.Add(zoomLevel);
+
+                resolution /= 2;
+            }
+
+            return zoomLevels;
+        }
+
         public ZoomLevel GetNearestZoomLevel(double resolution)
         {
-            InternalChecker.CheckArrayIsEmptyOrNull(ZoomLevels, "ZoomLevels");
+            InternalChecker.CheckArrayIsEmptyOrNull(zoomLevels, "ZoomLevels");
 
-            var orderedZoomLevels = ZoomLevels.OrderByDescending(z => z.Resolution);
+            var orderedZoomLevels = zoomLevels.OrderByDescending(z => z.Resolution);
 
             // smaller than smallest
             if (orderedZoomLevels.Last().Resolution > resolution)

@@ -14,7 +14,6 @@ namespace MappingTiles
         private TileSchema tileSchema;
 
         private byte[] content;
-        private Pixel drawingPosition;
 
         protected TileInfo()
         { }
@@ -110,18 +109,6 @@ namespace MappingTiles
             }
         }
 
-        public Pixel DrawingPosition
-        {
-            get
-            {
-                return drawingPosition;
-            }
-            set
-            {
-                drawingPosition = value;
-            }
-        }
-
         public TileSchema TileSchema
         {
             get
@@ -174,8 +161,7 @@ namespace MappingTiles
             }
             double minY = maxY - worldTileHeight;
 
-            BoundingBox tileBounds = new BoundingBox(minX, minY, maxX, maxY);
-            return tileBounds;
+            return new BoundingBox(minX, minY, maxX, maxY);
         }
 
         private void InitilizeColumnRowWithBounds()

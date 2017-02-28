@@ -1,11 +1,20 @@
-﻿
+﻿using System.Collections.ObjectModel;
+
 namespace MappingTiles
 {
     public class BingMapsTileSchema : SphericalMercatorTileSchema
     {
         public BingMapsTileSchema()
+            : base()
         {
-            ZoomLevels.RemoveAt(0);     // Bing Maps does't have the signle tile showing the whole world.
+        }
+
+        protected override Collection<ZoomLevel> GetZoomLevelsCore()
+        {
+            Collection<ZoomLevel> zoomLevels = base.GetZoomLevelsCore();
+            zoomLevels.RemoveAt(0);
+
+            return zoomLevels;
         }
     }
 }
