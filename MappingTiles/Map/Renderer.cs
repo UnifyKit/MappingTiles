@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace MappingTiles
+﻿namespace MappingTiles
 {
-    public abstract class Render
+    public abstract class Renderer
     {
         private object target;
 
-        protected Render()
+        protected Renderer()
+            : this(null)
         { }
 
-        protected Render(object target)
+        protected Renderer(object target)
         {
             this.Target = target;
         }

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 
 namespace MappingTiles
 {
-    public class View
+    public class Viewport
     {
-        public View()
+        public Viewport()
         { }
 
-        public View(double width, double height, double resolution)
+        public Viewport(double width, double height, double resolution)
         {
             this.Width = width;
             this.Height = height;
@@ -47,6 +43,7 @@ namespace MappingTiles
             get;
             private set;
         }
+
         public ZoomLevel ZoomLevel
         {
             get;
