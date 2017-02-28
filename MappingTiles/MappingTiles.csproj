@@ -62,7 +62,7 @@
     <Compile Include="BaseType\ZoomLevel.cs" />
     <Compile Include="Layer\Layer.cs" />
     <Compile Include="Layer\TileLayer.cs" />
-    <Compile Include="Map\Render.cs" />
+    <Compile Include="Map\Renderer.cs" />
     <Compile Include="Style\Color.cs" />
     <Compile Include="Tile\TileCache\FileTileCache.cs">
       <SubType>Code</SubType>
@@ -100,7 +100,7 @@
     <Compile Include="Tile\TileSchema\TileSchemas\BingMapsTileSchema.cs" />
     <Compile Include="Tile\TileSchema\TileSchemas\SphericalMercatorTileSchema.cs" />
     <Compile Include="Tile\TileSchema\TileSchemas\Wgs84TileSchema.cs" />
-    <Compile Include="Map\View.cs" />
+    <Compile Include="Map\Viewport.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Messages.resx">

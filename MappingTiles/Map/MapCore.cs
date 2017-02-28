@@ -11,12 +11,9 @@ namespace MappingTiles
     public class MapCore : IDisposable
     {
         private Viewport viewport;
-        private Renderer render;
+        private Renderer renderer;
 
         private string crs;
-        private BoundingBox boundingbox;
-        private ZoomLevel zoomLevel;
-        private Coordinate center;
         private bool viewInitialized;
 
         private ObservableCollection<Layer> layers;
@@ -50,15 +47,15 @@ namespace MappingTiles
             }
         }
 
-        public Renderer Render
+        public Renderer Renderer
         {
             get
             {
-                return render;
+                return renderer;
             }
             set
             {
-                render = value;
+                renderer = value;
             }
         }
 
@@ -89,12 +86,6 @@ namespace MappingTiles
 
         public void ViewChanged(RenderContext renderContext, UpdateMode updateMode)
         {
-            //RenderContext renderContext = new RenderContext()
-            //{
-            //    View = this.Viewport,
-            //    Render = this.Render
-            //};
-
             foreach (var layer in layers.ToList())
             {
                 layer.Draw(renderContext, updateMode);
