@@ -32,7 +32,7 @@ namespace MappingTiles.Winforms
             }
         }
 
-        public View Viewport
+        public Viewport Viewport
         {
             get
             {
@@ -74,8 +74,8 @@ namespace MappingTiles.Winforms
             {
                 renderContext = new RenderContext()
                 {
-                    View = this.Viewport,
-                    Render = GetMapRender()
+                    Viewport = this.Viewport,
+                    Renderer = GetMapRender()
                 };
             }
 
@@ -109,9 +109,9 @@ namespace MappingTiles.Winforms
             return map;
         }
 
-        protected virtual Render GetMapRender()
+        protected virtual Renderer GetMapRender()
         {
-            Render render = new GdiPlusRender();
+            Renderer render = new GdiPlusRender();
             return render;
         }
 

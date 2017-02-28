@@ -3,34 +3,34 @@ namespace MappingTiles
 {
     public class RenderContext
     {
-        private View view;
-        private Render render;
-        private object renderObject;
+        private Viewport viewport;
+        private Renderer renderer;
+        private object drawnObject;
         private Pixel renderPosition;
 
         public RenderContext()
         {
         }
 
-        public View View
+        public Viewport Viewport
         {
-            get { return view; }
-            set { view = value; }
+            get { return viewport; }
+            set { viewport = value; }
         }
 
-        public Render Render
+        public Renderer Renderer
         {
-            get { return render; }
-            set { render = value; }
+            get { return renderer; }
+            set { renderer = value; }
         }
 
-        public object RenderObject
+        public object DrawnObject
         {
-            get { return renderObject; }
-            set { renderObject = value; }
+            get { return drawnObject; }
+            set { drawnObject = value; }
         }
 
-        public Pixel RenderPosition
+        public Pixel DrawnPosition
         {
             get { return renderPosition; }
             set { renderPosition = value; }

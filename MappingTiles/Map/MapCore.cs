@@ -10,8 +10,8 @@ namespace MappingTiles
 {
     public class MapCore : IDisposable
     {
-        private View viewport;
-        private Render render;
+        private Viewport viewport;
+        private Renderer render;
 
         private string crs;
         private BoundingBox boundingbox;
@@ -27,7 +27,7 @@ namespace MappingTiles
 
             layers = new ObservableCollection<Layer>();
             layers.CollectionChanged += Layers_CollectionChanged;
-            viewport = new View(0, 0, double.NaN);
+            viewport = new Viewport(0, 0, double.NaN);
         }
 
         public ObservableCollection<Layer> Layers
@@ -38,7 +38,7 @@ namespace MappingTiles
             }
         }
 
-        public View Viewport
+        public Viewport Viewport
         {
             get
             {
@@ -50,7 +50,7 @@ namespace MappingTiles
             }
         }
 
-        public Render Render
+        public Renderer Render
         {
             get
             {
@@ -119,12 +119,6 @@ namespace MappingTiles
                 disposedValue = true;
             }
         }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~MapCore() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
 
         // This code added to correctly implement the disposable pattern.
         public void Dispose()

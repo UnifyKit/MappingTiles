@@ -32,20 +32,20 @@ namespace MappingTiles
                 return;
             }
 
-            if (Visible && renderContext.View.BoundingBox.Area > 0
-                && innerSource.Schema.MaxZoomLevel.Resolution > renderContext.View.ZoomLevel.Resolution
-                && innerSource.Schema.MinZoomLevel.Resolution < renderContext.View.ZoomLevel.Resolution)
+            if (Visible && renderContext.Viewport.BoundingBox.Area > 0
+                && innerSource.Schema.MaxZoomLevel.Resolution > renderContext.Viewport.ZoomLevel.Resolution
+                && innerSource.Schema.MinZoomLevel.Resolution < renderContext.Viewport.ZoomLevel.Resolution)
             {
-                tileMatrix = new TileMatrix(renderContext.View.ZoomLevel.Resolution, innerSource.Schema);
-                Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(renderContext.View.BoundingBox);
+                tileMatrix = new TileMatrix(renderContext.Viewport.ZoomLevel.Resolution, innerSource.Schema);
+                Collection<TileInfo> tilesInBbox = tileMatrix.GetTiles(renderContext.Viewport.BoundingBox);
                 foreach (TileInfo tileInfo in tilesInBbox)
                 {
                     this.innerSource.DownloadTile(tileInfo, new AsyncTileRequestCompletedHandler((tileInBytes, error) =>
                     {
-                        renderContext.RenderObject = tileInBytes;
-                        renderContext.RenderPosition = tileInfo.GetDrawingPosition((int)renderContext.View.Width, (int)renderContext.View.Height);
+                        renderContext.DrawnObject = tileInBytes;
+                        renderContext.DrawnPosition = tileInfo.GetDrawingPosition((int)renderContext.Viewport.Width, (int)renderContext.Viewport.Height);
 
-                        renderContext.Render.Draw(renderContext);
+                        renderContext.Renderer.Draw(renderContext);
                     }));
                 }
             }
