@@ -64,42 +64,42 @@
     <Compile Include="Layer\TileLayer.cs" />
     <Compile Include="Map\Render.cs" />
     <Compile Include="Style\Color.cs" />
-    <Compile Include="TileCache\FileTileCache.cs">
+    <Compile Include="Tile\TileCache\FileTileCache.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TileCache\ITileCache.cs" />
-    <Compile Include="TileCache\MemoryTileCache.cs" />
+    <Compile Include="Tile\TileCache\ITileCache.cs" />
+    <Compile Include="Tile\TileCache\MemoryTileCache.cs" />
     <Compile Include="Others\InternalChecker.cs" />
     <Compile Include="Others\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TileSchema\TileInfoEventArgs.cs" />
-    <Compile Include="TileSchema\TileInfoEventHandler.cs" />
-    <Compile Include="TileSource\BingMapsTileSource.cs">
+    <Compile Include="Tile\TileSchema\TileInfoEventArgs.cs" />
+    <Compile Include="Tile\TileSchema\TileInfoEventHandler.cs" />
+    <Compile Include="Source\TileSource\BingMapsTileSource.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TileSource\BingMapsType.cs">
+    <Compile Include="Source\TileSource\BingMapsType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TileSource\VectorSource.cs" />
-    <Compile Include="TileSource\OpenStreetMapTileSource.cs" />
-    <Compile Include="TileSource\OpenStreetMapType.cs" />
-    <Compile Include="TileSource\RasterSource.cs" />
-    <Compile Include="TileSource\Source.cs" />
-    <Compile Include="TileSource\TileSource.cs" />
-    <Compile Include="TileRequest\ImageTileDownloader.cs" />
-    <Compile Include="TileRequest\RequestPool\AsyncTileRequest.cs" />
-    <Compile Include="TileRequest\RequestPool\AsyncTileRequestCompletedHandler.cs" />
-    <Compile Include="TileRequest\RequestPool\AsyncTileRequestQueue.cs" />
-    <Compile Include="TileRequest\RequestPool\NetworkPriority.cs" />
-    <Compile Include="TileRequest\TileDownloader.cs" />
-    <Compile Include="TileSchema\TileFormat.cs" />
-    <Compile Include="TileSchema\TileInfo.cs" />
-    <Compile Include="TileSchema\TileMatrix.cs" />
-    <Compile Include="TileSchema\TileRange.cs" />
-    <Compile Include="TileSchema\TileSchema.cs" />
-    <Compile Include="TileSchema\TileSchemas\BingMapsTileSchema.cs" />
-    <Compile Include="TileSchema\TileSchemas\SphericalMercatorTileSchema.cs" />
-    <Compile Include="TileSchema\TileSchemas\Wgs84TileSchema.cs" />
+    <Compile Include="Source\VectorSource.cs" />
+    <Compile Include="Source\TileSource\OpenStreetMapTileSource.cs" />
+    <Compile Include="Source\TileSource\OpenStreetMapType.cs" />
+    <Compile Include="Source\RasterSource.cs" />
+    <Compile Include="Source\Source.cs" />
+    <Compile Include="Source\TileSource.cs" />
+    <Compile Include="Tile\TileRequest\ImageTileDownloader.cs" />
+    <Compile Include="Tile\TileRequest\RequestPool\AsyncTileRequest.cs" />
+    <Compile Include="Tile\TileRequest\RequestPool\AsyncTileRequestCompletedHandler.cs" />
+    <Compile Include="Tile\TileRequest\RequestPool\AsyncTileRequestQueue.cs" />
+    <Compile Include="Tile\TileRequest\RequestPool\NetworkPriority.cs" />
+    <Compile Include="Tile\TileRequest\TileDownloader.cs" />
+    <Compile Include="Tile\TileSchema\TileFormat.cs" />
+    <Compile Include="Tile\TileSchema\TileInfo.cs" />
+    <Compile Include="Tile\TileSchema\TileMatrix.cs" />
+    <Compile Include="Tile\TileSchema\TileRange.cs" />
+    <Compile Include="Tile\TileSchema\TileSchema.cs" />
+    <Compile Include="Tile\TileSchema\TileSchemas\BingMapsTileSchema.cs" />
+    <Compile Include="Tile\TileSchema\TileSchemas\SphericalMercatorTileSchema.cs" />
+    <Compile Include="Tile\TileSchema\TileSchemas\Wgs84TileSchema.cs" />
     <Compile Include="Map\View.cs" />
   </ItemGroup>
   <ItemGroup>
