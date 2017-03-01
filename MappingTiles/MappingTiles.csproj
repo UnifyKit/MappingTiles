@@ -48,6 +48,7 @@
     <Compile Include="Layer\RasterLayer.cs" />
     <Compile Include="Layer\UpdateMode.cs" />
     <Compile Include="Layer\VectorLayer.cs" />
+    <Compile Include="Map\LayerCollection.cs" />
     <Compile Include="Map\MapCore.cs" />
     <Compile Include="Map\RenderContext.cs" />
     <Compile Include="Messages.Designer.cs">

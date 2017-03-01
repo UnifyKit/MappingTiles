@@ -12,6 +12,8 @@ namespace MappingTiles
         private bool visible;
         private double opacity;
 
+        private ZoomLevel minZoomLevel;
+        private ZoomLevel maxZoomLevel;
         private Source datasource;
 
         protected Layer()
@@ -87,6 +89,18 @@ namespace MappingTiles
             {
                 datasource = value;
             }
+        }
+
+        public ZoomLevel MaxZoomLevel
+        {
+            get { return maxZoomLevel; }
+            set { maxZoomLevel = value; }
+        }
+
+        public ZoomLevel MinZoomLevel
+        {
+            get { return minZoomLevel; }
+            set { minZoomLevel = value; }
         }
 
         /// <summary>

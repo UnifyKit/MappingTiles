@@ -27,6 +27,9 @@ namespace MappingTiles
             set;
         }
 
+        /// <summary>
+        /// Indicates the minimum scale supported by this data source.
+        /// </summary>
         public ZoomLevel MinZoomLevel
         {
             get
@@ -43,6 +46,9 @@ namespace MappingTiles
             }
         }
 
+        /// <summary>
+        /// Indicates the maxinum scale supported by this data source.
+        /// </summary>
         public ZoomLevel MaxZoomLevel
         {
             get
@@ -59,6 +65,9 @@ namespace MappingTiles
             }
         }
 
+        /// <summary>
+        /// Indicates how many zoom levels devided between mininum and maxinum zoom levels.
+        /// </summary>
         public int NumberOfZoomLevels
         {
             get { return numberOfZoomLevels; }
